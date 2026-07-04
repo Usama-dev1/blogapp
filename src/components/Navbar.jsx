@@ -6,8 +6,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="w-full mx-auto bg-primary border-b border-border">
-      <div className=" flex items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
+    <nav className="bg-primary border-b border-border">
+      <div className="body-width flex items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
         <div className="text-2xl font-bold text-brand">BlogApp</div>
 
         {/* Desktop links */}

@@ -59,7 +59,7 @@
   .heading-main {
     @apply mt-0 py-2 font-bold not-italic leading-[1.2] lg:mb-4;
     /* Scales from 28px on mobile up to 48px on large screens */
-    font-size: clamp(1.75rem, 1.5rem + 1vw, 3rem);
+    font-size: clamp(1.25rem, 1.25rem + 1vw, 3rem);
   }
   .btn-base {
     @apply font-ui font-semibold text-muted-text rounded-full cursor-pointer transition-colors duration-150 hover:text-body-text;
@@ -94,7 +94,7 @@
   }
 
   .btn-sm {
-    @apply px-3 py-1.5 text-base rounded-full;
+    @apply px-3 py-1.5 text-[13px] rounded-full;
   }
 
   .btn-md {
@@ -118,11 +118,14 @@
   }
 }
 @layer utilities {
-  .body-container {
+  .body-width {
     width: clamp(360px, 80vw, 2560px);
     margin-inline: auto;
-    margin: 0px 24px;
     padding: 6px 8px;
+  }
+  .comment-width {
+    width: clamp(320px, 90vw, 600px);
+    margin-inline: auto;
   }
   .prose-text {
     font-size: clamp(1rem, 0.95rem + 0.25vw, 1.25rem);
