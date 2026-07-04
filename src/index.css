@@ -1,4 +1,131 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&display=swap");
 @import "tailwindcss";
+
 :root {
-  --primary-color: --secondary-color: ;
+  /* for base colors */
+  --color-primary: #ffffff;
+  --color-secondary: #f7f7f7;
+  /* for text */
+  --color-body-text: #242424;
+  --color-muted-text: #6b6b6b;
+  /* for text and links */
+  --color-brand: #1a8917;
+  --color-brand-hover: #156d12;
+  --color-link: #0f71c1;
+  --color-link-hover: #0b5a9b;
+  /* for border */
+  --color-border: #e5e5e5;
+  /* for errors */
+  --color-state-error: #d64545;
+  --color-state-error-hover: #b93a3a;
+  --color-state-highlight: #ffc017;
+}
+
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+
+  --color-body-text: var(--color-body-text);
+  --color-muted-text: var(--color-muted-text);
+
+  --color-brand: var(--color-brand);
+  --color-brand-hover: var(--color-brand-hover);
+  --color-link: var(--color-link);
+  --color-link-hover: var(--color-link-hover);
+
+  --color-border: var(--color-border);
+
+  --color-state-error: var(--color-state-error);
+  --color-state-error-hover: var(--color-state-error-hover);
+  --color-state-highlight: var(--color-state-highlight);
+  --container: var(--container-width);
+  --font-ui: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-article:
+    "Source Serif 4", Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+@layer base {
+  body {
+    @apply bg-primary text-body-text font-ui text-base;
+  }
+
+  .post-body {
+    @apply font-article;
+  }
+}
+
+@layer components {
+  .heading-main {
+    @apply mt-0 py-2 font-bold not-italic leading-[1.2] lg:mb-4;
+    /* Scales from 28px on mobile up to 48px on large screens */
+    font-size: clamp(1.75rem, 1.5rem + 1vw, 3rem);
+  }
+  .btn-base {
+    @apply font-ui font-semibold text-muted-text rounded-full cursor-pointer transition-colors duration-150 hover:text-body-text;
+  }
+
+  .btn-primary {
+    @apply font-ui font-semibold text-2xl rounded-full cursor-pointer transition-colors duration-150 bg-brand text-white hover:bg-brand-hover;
+  }
+
+  .btn-primary:disabled {
+    @apply bg-muted-text text-white opacity-40 cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply font-ui font-semibold  cursor-pointer transition-colors duration-150 bg-transparent border border-border text-body-text hover:bg-secondary;
+  }
+
+  .btn-ghost {
+    @apply font-ui bg-transparent border-none text-link hover:text-link-hover hover:underline cursor-pointer;
+  }
+
+  .btn-danger {
+    @apply font-ui font-semibold  cursor-pointer transition-colors duration-150 bg-state-error text-white hover:bg-state-error-hover;
+  }
+
+  .btn-icon {
+    @apply bg-transparent border-none  text-muted-text hover:text-body-text hover:bg-secondary transition-colors duration-150 cursor-pointer;
+  }
+
+  .btn-icon.active {
+    @apply text-brand;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-base rounded-full;
+  }
+
+  .btn-md {
+    @apply px-5 py-2.5 text-lg rounded-full;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-xl rounded-full;
+  }
+
+  .btn-icon-sm {
+    @apply p-1.5;
+  }
+
+  .btn-icon-md {
+    @apply p-2;
+  }
+
+  .btn-icon-lg {
+    @apply p-3;
+  }
+}
+@layer utilities {
+  .body-container {
+    width: clamp(360px, 80vw, 2560px);
+    margin-inline: auto;
+    margin: 0px 24px;
+    padding: 6px 8px;
+  }
+  .prose-text {
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.25rem);
+    line-height: clamp(1.5rem, 1.4rem + 0.5vw, 2rem);
+  }
 }
