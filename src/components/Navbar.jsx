@@ -11,12 +11,12 @@ const Navbar = () => {
         <div className="text-2xl font-bold text-brand">BlogApp</div>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-6">
-          <a href="/" className=" hover:text-brand">
+        <div className="hidden md:flex items-center space-x-8">
+          <a href="/" className="text-xl hover:text-brand">
             Home
           </a>
-          <button className="btn-primary btn-sm md:btn-lg">Sign up</button>
-          <button className="btn-base btn-sm md:btn-lg">Sign in</button>
+          <button className="btn-primary btn-md">Sign up</button>
+          <button className="btn-base btn-md">Sign in</button>
         </div>
 
         {/* Mobile toggle */}

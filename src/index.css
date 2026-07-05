@@ -47,7 +47,7 @@
 
 @layer base {
   body {
-    @apply bg-primary text-body-text font-ui text-base;
+    @apply bg-primary;
   }
 
   .post-body {
@@ -71,7 +71,7 @@
   }
 
   .btn-primary {
-    @apply font-ui font-semibold text-2xl rounded-full cursor-pointer transition-colors duration-150 bg-brand text-white hover:bg-brand-hover;
+    @apply font-ui font-semibold rounded-full cursor-pointer transition-colors duration-150 bg-brand text-white hover:bg-brand-hover;
   }
 
   .btn-primary:disabled {

@@ -1,11 +1,14 @@
-// import Navbar from "./components/Navbar";
-import Homepage from "./pages/Homepage";
-
+import { BrowserRouter, Routes, Route } from "react-router";
+import Homepage from "./pages/HomePage";
+import PostDetailsPage from "./pages/PostDetailsPage";
 const App = () => {
   return (
-    <>
-      <Homepage />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<Homepage />} />
+        <Route path="/:id" element={<PostDetailsPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
