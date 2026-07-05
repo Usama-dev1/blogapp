@@ -6,7 +6,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-primary border-b border-border">
+    <nav className="relative bg-primary border-b border-border">
       <div className="body-width flex items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
         <div className="text-2xl font-bold text-brand">BlogApp</div>
 
@@ -31,7 +31,7 @@ const Navbar = () => {
       {/* Mobile menu */}
       {isOpen && (
         <div
-          className={`md:hidden flex flex-col text-center gap-4 px-4 pb-6 border-t border-border transition py-4 duration-150 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+          className={`md:hidden absolute inset-0 top-10 z-50 w-full min-h-screen flex flex-col text-center gap-4 px-4 pb-6 bg-secondary transition py-4 duration-150 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
         >
           <a href="/" className="text-body">
             Home

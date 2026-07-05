@@ -2,7 +2,7 @@ import React from "react";
 
 const PostCard = () => {
   return (
-    <div className="max-w-140 bg-secondary rounded-lg shadow-sm p-3 md:p-6">
+    <div className="max-w-140 bg-secondary rounded-lg shadow-sm p-3 md:p-3">
       <div className="flex  flex-col gap-4">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
           <div className="w-full sm:w-32 h-40 sm:h-32 bg-fuchsia-300 rounded-xl shrink-0 flex items-center justify-center">
