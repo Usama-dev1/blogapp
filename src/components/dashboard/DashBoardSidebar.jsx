@@ -8,18 +8,18 @@ const DashBoardSidebar = () => {
   const navigate = useNavigate();
 
   const links = [
-    { name: "Home", icon: <CiHome />, path: "/dashboard", end: true },
-    { name: "Write", icon: <MdOutlinePostAdd />, path: "/" },
-    { name: "Drafts", icon: <MdOutlineDrafts />, path: "/dashboard/posts" },
-    { name: "All posts", icon: <FaList />, path: "/dashboard/posts" },
+    { name: "Home", icon: <CiHome />, path: "/", end: true },
+    { name: "Write", icon: <MdOutlinePostAdd />, path: "dashboard/post" },
+    { name: "Drafts", icon: <MdOutlineDrafts />, path: "/dashboard/drafts" },
+    { name: "My posts", icon: <FaList />, path: "/dashboard/all-posts" },
   ];
 
   return (
     <aside className="w-full h-screen p-2 flex flex-col justify-between items-center border-r border-border font-ui">
       <div className="flex flex-col items-center justify-between gap-4 py-12">
-        <div className="text-2xl font bold py-4 font-bold">My Dashboard</div>
+        <div className="text-xl py-4 font-bold">My Dashboard</div>
 
-        <nav className="w-full flex flex-col h-full items-center justify-start gap-7">
+        <nav className="w-full flex flex-col h-full items-start justify-start me-2">
           <NavLink
             to="/dashboard/create-post"
             className="btn-primary w-full text-center btn-md"
@@ -32,14 +32,14 @@ const DashBoardSidebar = () => {
               key={`${link.path}-${link.name}`}
               to={link.path}
               className={({ isActive }) =>
-                `px-4 py-1 text-start w-full rounded-md transition-all text-md 2xl:prose-text duration-200 font-medium ${
+                `px-4 py-4 text-start w-full rounded-md transition-all text-md 2xl:prose-text duration-200 font-medium ${
                   isActive
                     ? "bg-primary text-black"
-                    : "text-muted-text hover:text-brand"
+                    : "text-muted-text hover:text-body-text"
                 }`
               }
             >
-              <span className=" w-full flex items-center gap-4">
+              <span className=" w-full flex items-center gap-2">
                 {link.icon}
                 {link.name}
               </span>

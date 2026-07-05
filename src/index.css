@@ -103,7 +103,7 @@
   }
 
   .btn-md {
-    @apply px-5 py-2.5 text-lg rounded-full;
+    @apply px-5 py-2 text-[15px] rounded-full;
   }
 
   .btn-lg {
