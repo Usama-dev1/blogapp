@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
+import { useAuth } from "../../hooks/useAuth";
+import { NavLink } from "react-router";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { state } = useAuth();
+  const loggedIn = state.isAuthenticated;
   return (
     <nav className="relative bg-primary border-b border-border">
       <div className="body-width flex items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
@@ -15,8 +18,24 @@ const Navbar = () => {
           <a href="/" className="text-xl hover:text-brand">
             Home
           </a>
-          <button className="btn-primary btn-md">Sign up</button>
-          <button className="btn-base btn-md">Sign in</button>
+          {loggedIn ? (
+            <NavLink to="/dashboard">
+              <button className="btn-primary btn-md">Dashboard</button>
+            </NavLink>
+          ) : (
+            <>
+              <NavLink to="/register">
+                <button className="btn-primary btn-sm w-full px-8">
+                  Sign up
+                </button>
+              </NavLink>
+              <NavLink to="/login">
+                <button className="btn-secondary btn-sm w-full px-8">
+                  Sign in
+                </button>
+              </NavLink>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -36,8 +55,21 @@ const Navbar = () => {
           <a href="/" className="text-body">
             Home
           </a>
-          <button className="btn-primary btn-sm w-full px-8">Sign up</button>
-          <button className="btn-secondary btn-sm w-full px-8">Sign in</button>
+
+          {loggedIn ? (
+            <button className="btn-primary btn-sm w-full px-8">
+              Dashboard
+            </button>
+          ) : (
+            <>
+              <button className="btn-primary btn-sm w-full px-8">
+                Sign up
+              </button>
+              <button className="btn-secondary btn-sm w-full px-8">
+                Sign in
+              </button>
+            </>
+          )}
         </div>
       )}
     </nav>

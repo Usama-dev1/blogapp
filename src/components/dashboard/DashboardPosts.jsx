@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const DashboardPosts = () => {
   return (
-    <div className="mx-auto">
+    <div className="mx-5 flex justify-center items-center w-full">
       <div className="relative flex flex-col text-center w-full text-body-text bg-primary">
         <div className="relative mx-4 mt-4 overflow-hidden text-body-text bg-primary">
           <div className="flex items-center justify-between ">
