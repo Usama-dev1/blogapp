@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 import Homepage from "./pages/HomePage";
 import PostDetailsPage from "./pages/PostDetailsPage";
 import MainLayout from "./layouts/MainLayout";
-import DashBoardLayout from "./layouts/DashboardLayout";
-import DashboardPage from "./pages/DashboardPage";
-import DashboardPosts from "./components/dashboard/DashboardPosts";
-import DashboardDrafts from "./components/dashboard/DashboardDrafts";
-import UserListTable from "./components/super-admin/UserListTable";
-import DashboardPostForm from "./components/dashboard/DashboardPostForm";
+import UserDashBoardLayout from "./layouts/UserDashboardLayout";
+import UserDashboardPosts from "./components/dashboard/user/UserDashboardPosts";
+import UserDashboardDrafts from "./components/dashboard/user/UserDashboardDrafts";
+import UserListTable from "./components/dashboard/user/UserListTable";
+import UserDashboardPostForm from "./components/dashboard/user/UserDashboardPostForm";
 import LoginForm from "./components/auth/loginForm";
 import RegisterForm from "./components/auth/registerForm";
 const App = () => {
@@ -20,15 +20,26 @@ const App = () => {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/:id" element={<PostDetailsPage />} />
         </Route>
-        <Route element={<DashBoardLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route
-            path="/dashboard/create-post"
-            element={<DashboardPostForm />}
-          />
-          <Route path="/dashboard/user" element={<UserListTable />} />
-          <Route path="/dashboard/drafts" element={<DashboardDrafts />} />
-          <Route path="/dashboard/all-posts" element={<DashboardPosts />} />
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={["user", "admin", "super_admin"]} />
+          }
+        >
+          <Route element={<UserDashBoardLayout />}>
+            <Route
+              path="/dashboard/user/create-post"
+              element={<UserDashboardPostForm />}
+            />
+            <Route path="/dashboard/user" element={<UserListTable />} />
+            <Route
+              path="/dashboard/user/drafts"
+              element={<UserDashboardDrafts />}
+            />
+            <Route
+              path="/dashboard/user/all-posts"
+              element={<UserDashboardPosts />}
+            />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

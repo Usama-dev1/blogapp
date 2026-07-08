@@ -7,16 +7,20 @@ import { MdOutlinePostAdd } from "react-icons/md";
 import { MdOutlineDrafts } from "react-icons/md";
 import { FaList } from "react-icons/fa6";
 
-const DashBoardNav = () => {
+const UserDashBoardNav = () => {
   const links = [
-    { name: "Home", icon: <CiHome />, path: "/", end: true },
-    { name: "Write", icon: <MdOutlinePostAdd />, path: "/" },
+    { name: "Home", icon: <CiHome />, path: "/dashboard/user", end: true },
+    {
+      name: "Write",
+      icon: <MdOutlinePostAdd />,
+      path: "/dashboard/user/create-post",
+    },
     {
       name: "Drafts",
       icon: <MdOutlineDrafts />,
-      path: "/dashboard/posts",
+      path: "/dashboard/user/drafts",
     },
-    { name: "All posts", icon: <FaList />, path: "/dashboard/all-posts" },
+    { name: "All posts", icon: <FaList />, path: "/dashboard/user/all-posts" },
   ];
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -100,4 +104,4 @@ const DashBoardNav = () => {
   );
 };
 
-export default DashBoardNav;
+export default UserDashBoardNav;

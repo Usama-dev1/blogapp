@@ -1,8 +1,11 @@
 // AppProviders.jsx
 import { PostProvider } from "./postContext";
+import { CategoryProvider } from "./categoryContext";
 import { AuthProvider } from "./authContext";
 export const AppProviders = ({ children }) => (
   <AuthProvider>
-    <PostProvider>{children}</PostProvider>
+    <CategoryProvider>
+      <PostProvider>{children}</PostProvider>
+    </CategoryProvider>
   </AuthProvider>
 );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const DashboardDrafts = () => {
+const UserDashboardDrafts = () => {
   return (
     <div className="mx-auto">
       <div className="relative flex flex-col text-center w-full text-body-text bg-primary px-4">
@@ -88,4 +88,4 @@ const DashboardDrafts = () => {
   );
 };
 
-export default DashboardDrafts;
+export default UserDashboardDrafts;

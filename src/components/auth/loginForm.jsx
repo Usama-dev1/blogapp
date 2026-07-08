@@ -11,14 +11,14 @@ export default function LoginForm() {
     e.preventDefault();
     try {
       await login({ email, password });
-      navigate("/");
+      return navigate("/");
     } catch (err) {
       console.error("Login failed:", err);
     }
   };
   useEffect(() => {
     if (state.isAuthenticated) {
-      navigate("/");
+      return navigate("/");
     }
   }, [state.isAuthenticated, navigate]);
   return (

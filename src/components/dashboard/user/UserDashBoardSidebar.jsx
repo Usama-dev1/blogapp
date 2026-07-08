@@ -3,15 +3,27 @@ import { CiHome } from "react-icons/ci";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { MdOutlineDrafts } from "react-icons/md";
 import { FaList } from "react-icons/fa6";
-
-const DashBoardSidebar = () => {
+import { useAuth } from "../../../hooks/useAuth";
+const UserDashBoardSidebar = () => {
   const navigate = useNavigate();
-
+  const { logout } = useAuth();
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
   const links = [
     { name: "Home", icon: <CiHome />, path: "/", end: true },
-    { name: "Write", icon: <MdOutlinePostAdd />, path: "dashboard/post" },
-    { name: "Drafts", icon: <MdOutlineDrafts />, path: "/dashboard/drafts" },
-    { name: "My posts", icon: <FaList />, path: "/dashboard/all-posts" },
+    {
+      name: "Write",
+      icon: <MdOutlinePostAdd />,
+      path: "/dashboard/user/create-post",
+    },
+    {
+      name: "Drafts",
+      icon: <MdOutlineDrafts />,
+      path: "/dashboard/user/drafts",
+    },
+    { name: "My posts", icon: <FaList />, path: "/dashboard/user/all-posts" },
   ];
 
   return (
@@ -21,7 +33,7 @@ const DashBoardSidebar = () => {
 
         <nav className="w-full flex flex-col h-full items-start justify-start me-2">
           <NavLink
-            to="/dashboard/create-post"
+            to="/dashboard/user/create-post"
             className="btn-primary w-full text-center btn-md"
           >
             Create Post
@@ -49,12 +61,7 @@ const DashBoardSidebar = () => {
       </div>
 
       <div className="w-full text-center mb-4 px-2">
-        <button
-          onClick={() => {
-            navigate("/");
-          }}
-          className="btn-danger btn-sm "
-        >
+        <button onClick={handleLogout} className="btn-danger btn-sm ">
           Logout
         </button>
       </div>
@@ -62,4 +69,4 @@ const DashBoardSidebar = () => {
   );
 };
 
-export default DashBoardSidebar;
+export default UserDashBoardSidebar;

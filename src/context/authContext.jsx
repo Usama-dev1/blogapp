@@ -125,7 +125,8 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: SET_LOADING, payload: true });
     try {
       const response = await api.post(`/auth/logout`);
-      const { success, message } = response;
+      console.log(response.data);
+      const { success, message } = response.data;
 
       if (success) {
         clearStoredToken();

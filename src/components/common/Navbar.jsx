@@ -16,24 +16,22 @@ const Navbar = () => {
         {/* Desktop links */}
         <div className="hidden md:flex items-center space-x-8">
           {loggedIn ? (
-            <NavLink to="/dashboard">
+            <NavLink to="/dashboard/user">
               <button className="btn-primary btn-md text-xs! ">
                 Go to Dashboard
               </button>
             </NavLink>
           ) : (
             <>
-              <NavLink href="/" className="text-xl hover:text-brand">
+              <NavLink to="/" className="text-lg hover:text-brand">
                 Home
               </NavLink>
               <NavLink to="/register">
-                <button className="btn-primary btn-sm w-full px-8">
-                  Sign up
-                </button>
+                <button className="btn-primary btn-md w-full">Register</button>
               </NavLink>
               <NavLink to="/login">
-                <button className="btn-secondary btn-sm w-full px-8">
-                  Sign in
+                <button className="btn-secondary btn-md w-full mx-2">
+                  Login
                 </button>
               </NavLink>
             </>
@@ -59,17 +57,25 @@ const Navbar = () => {
           </a>
 
           {loggedIn ? (
-            <button className="btn-primary btn-sm w-full px-8">
-              Dashboard
-            </button>
+            <NavLink to="/dashboard/user">
+              <button className="btn-primary btn-sm w-full px-8">
+                Dashboard
+              </button>
+            </NavLink>
           ) : (
             <>
-              <button className="btn-primary btn-sm w-full px-8">
-                Sign up
-              </button>
-              <button className="btn-secondary btn-sm w-full px-8">
-                Sign in
-              </button>
+              <NavLink to="/register">
+                <button className="btn-primary btn-sm w-full px-8">
+                  Register
+                </button>
+                ▐
+              </NavLink>
+              <NavLink to="/login">
+                <button className="btn-secondary btn-sm w-full px-8">
+                  Login
+                </button>
+                ▐
+              </NavLink>
             </>
           )}
         </div>

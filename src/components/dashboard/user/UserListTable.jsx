@@ -1,6 +1,19 @@
-import React, { useMemo } from "react";
-
+import { useMemo } from "react";
+import { useAuth } from "../../../hooks/useAuth";
+import { usePostHook } from "../../../hooks/usePostHook";
 const UserListTable = () => {
+  const {
+    state: { user },
+  } = useAuth();
+  const {
+    state: { posts },
+  } = usePostHook();
+  const userPosts = useMemo(() => {
+    if (!user?._id || !posts) return [];
+    return posts.filter((post) => post.userId === user.id);
+    // if author is stored as a raw id string instead of populated object:
+    // return posts.filter((post) => post.author === user._id || post.authorId === user._id);
+  }, [posts, user]);
   return (
     <div className="max-w-full mx-auto">
       <div className="relative flex flex-col w-full text-body-text bg-primary">

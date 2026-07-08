@@ -1,6 +1,22 @@
-import React, { useState } from "react";
-
-const DashboardPosts = () => {
+import { useMemo } from "react";
+import { useAuth } from "../../../hooks/useAuth";
+import { usePostHook } from "../../../hooks/usePostHook";
+const UserDashboardPosts = () => {
+  const {
+    state: { user },
+  } = useAuth();
+  const {
+    state: { posts },
+  } = usePostHook();
+  console.log(user, posts);
+  const userPosts = useMemo(() => {
+    if (!user?.id || !posts) return [];
+    return posts.filter((post) => post.userId === user.id);
+    // if author is stored as a raw id string instead of populated object:
+    // return posts.filter((post) => post.author === user._id || post.authorId === user._id);
+  }, [posts, user]);
+  console.log(userPosts);
+  if (userPosts.length === 0) return <div>No user posts</div>;
   return (
     <div className="mx-5 flex justify-center items-center w-full">
       <div className="relative flex flex-col text-center w-full text-body-text bg-primary">
@@ -33,17 +49,17 @@ const DashboardPosts = () => {
               </tr>
             </thead>
             <tbody>
-              {[...Array(8)].map((_, index) => (
+              {userPosts.map((p) => (
                 <tr>
                   <td className="p-4 w-20 border-b border-border">
                     <div className="flex  items-center justify-center gap-3">
-                      <span className="">Lorem ipsum dolor sit amet.</span>
+                      <span className="">{p.title.slice(0, 50)}</span>
                     </div>
                   </td>
                   <td className="p-4 w-20 border-b border-border">
                     <div className="flex items-center justify-center gap-3 ">
                       <span className="font-bold text-xs sm:text-base text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20">
-                        Published
+                        {p.isDraft ? "Draft" : "Published"}
                       </span>
                     </div>
                   </td>
@@ -66,7 +82,7 @@ const DashboardPosts = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex items-center justify-between p-3">
+        <div className="flex items-center justify-around p-3">
           <p className="block text-sm text-slate-500">Page 1 of 10</p>
           <div className="flex gap-1">
             <button
@@ -88,4 +104,4 @@ const DashboardPosts = () => {
   );
 };
 
-export default DashboardPosts;
+export default UserDashboardPosts;
