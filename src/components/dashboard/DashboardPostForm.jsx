@@ -31,16 +31,10 @@ const DashboardPostForm = () => {
 
       {/* Buttons */}
       <div className="flex gap-4 mt-4">
-        <button
-          type="submit"
-          className="px-8 py-3 bg-green-600 text-white text-lg font-medium rounded-lg hover:bg-green-700 transition"
-        >
+        <button type="submit" className="btn-primary btn-md  ">
           Add Post
         </button>
-        <button
-          type="button"
-          className="px-8 py-3 bg-gray-200 text-gray-700 text-lg font-medium rounded-lg hover:bg-gray-300 transition"
-        >
+        <button type="button" className="btn-secondary btn-md">
           Save Draft
         </button>
       </div>

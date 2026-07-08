@@ -48,7 +48,7 @@ const DashBoardSidebar = () => {
         </nav>
       </div>
 
-      <div className="w-full text-center px-2">
+      <div className="w-full text-center mb-4 px-2">
         <button
           onClick={() => {
             navigate("/");

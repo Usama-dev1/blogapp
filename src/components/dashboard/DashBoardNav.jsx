@@ -9,7 +9,7 @@ import { FaList } from "react-icons/fa6";
 
 const DashBoardNav = () => {
   const links = [
-    { name: "Home", icon: <CiHome />, path: "/dashboard", end: true },
+    { name: "Home", icon: <CiHome />, path: "/", end: true },
     { name: "Write", icon: <MdOutlinePostAdd />, path: "/" },
     {
       name: "Drafts",
@@ -34,7 +34,14 @@ const DashBoardNav = () => {
       <div className="text-2xl">
         <NavLink to="/">BlogApp</NavLink>
       </div>
-
+      <div>
+        {" "}
+        <NavLink to="/dashboard">
+          <button className="btn-primary btn-md text-xs! ">
+            Go to Dashboard
+          </button>
+        </NavLink>
+      </div>
       <button
         className="md:hidden z-50 relative  p-1 rounded-lg transition-colors focus:outline-none"
         onClick={() => setMenuOpen(!menuOpen)}
@@ -63,9 +70,9 @@ const DashBoardNav = () => {
                   Create Post
                 </NavLink>
               </div>
-              {links.map((link) => (
+              {links.map((link, index) => (
                 <NavLink
-                  key={link.path}
+                  key={index}
                   to={link.path}
                   end={link.end}
                   onClick={closeMenu}

@@ -15,15 +15,17 @@ const Navbar = () => {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center space-x-8">
-          <a href="/" className="text-xl hover:text-brand">
-            Home
-          </a>
           {loggedIn ? (
             <NavLink to="/dashboard">
-              <button className="btn-primary btn-md">Dashboard</button>
+              <button className="btn-primary btn-md text-xs! ">
+                Go to Dashboard
+              </button>
             </NavLink>
           ) : (
             <>
+              <NavLink href="/" className="text-xl hover:text-brand">
+                Home
+              </NavLink>
               <NavLink to="/register">
                 <button className="btn-primary btn-sm w-full px-8">
                   Sign up
