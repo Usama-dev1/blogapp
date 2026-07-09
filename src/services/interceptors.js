@@ -107,7 +107,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axios.post(
+        const { data } = await api.post(
           `/auth/refresh-token`,
           {},
           {

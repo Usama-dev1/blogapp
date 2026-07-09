@@ -18,7 +18,8 @@ export default function postReducer(state = initialState, action) {
     case postActionTypes.CREATE_POST:
       return {
         ...state,
-        posts: [action.payload?.data ?? action.payload, ...state.posts],
+        posts: [action.payload.currentPost, ...state.posts],
+        currentPost: action.payload.currentPost,
         error: null,
         isLoading: false,
       };
@@ -33,6 +34,7 @@ export default function postReducer(state = initialState, action) {
         error: null,
         isLoading: false,
       };
+
     case postActionTypes.SET_LOADING:
       return {
         ...state,
