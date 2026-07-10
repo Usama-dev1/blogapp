@@ -1,12 +1,18 @@
-import { createContext, useReducer, useEffect } from "react";
+import { createContext, useReducer, useEffect, useMemo } from "react";
 import { api } from "../services/interceptors.js";
 
 import { initialState } from "../reducers/postReducer";
 import postReducer from "../reducers/postReducer";
 import { postActionTypes } from "../reducers/actionTypes";
 
-const { CREATE_POST, GET_POSTS_SUCCESS, SET_ERROR, SET_LOADING } =
-  postActionTypes;
+const {
+  CREATE_POST,
+  DELETE_POST,
+  GET_POST,
+  GET_POSTS_SUCCESS,
+  SET_ERROR,
+  SET_LOADING,
+} = postActionTypes;
 
 const PostContext = createContext();
 
@@ -37,6 +43,8 @@ export const PostProvider = ({ children }) => {
       dispatch({ type: SET_ERROR, payload: msg });
       console.error("Error during fetch posts:", error);
       throw error;
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
     }
   };
   const getPosts = async () => {
@@ -60,18 +68,64 @@ export const PostProvider = ({ children }) => {
       dispatch({ type: SET_ERROR, payload: msg });
       console.error("Error during fetch posts:", error);
       throw error;
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
     }
   };
-
+  const getPostById = async (id) => {
+    dispatch({ type: SET_LOADING, payload: true });
+    try {
+      const response = await api.get(`/post/${id}`);
+      const { data, success } = response.data;
+      if (success && data) {
+        console.log("test2", data, success);
+        dispatch({ type: GET_POST, payload: { currentPost: data } });
+        console.log("test3", data);
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: "failed to fetch post",
+        });
+      }
+    } catch (error) {
+      const msg = errorMessage(error, "failed to fetch post");
+      dispatch({ type: SET_ERROR, payload: msg });
+      throw error;
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
+  };
+  const deletePost = async (postId) => {
+    dispatch({ type: SET_LOADING, payload: true });
+    try {
+      const response = await api.delete(`/post/${postId}`);
+      const { success, message } = response.data;
+      if (success) {
+        dispatch({ type: DELETE_POST, payload: { postId } });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: message || "failed to delete post",
+        });
+      }
+    } catch (error) {
+      const msg = errorMessage(error, "failed to delete post");
+      dispatch({ type: SET_ERROR, payload: msg });
+      throw error;
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
+  };
   useEffect(() => {
     getPosts();
   }, []);
 
-  return (
-    <PostContext.Provider value={{ state, dispatch, getPosts, createPost }}>
-      {children}
-    </PostContext.Provider>
+  const value = useMemo(
+    () => ({ state, dispatch, getPosts, createPost, getPostById, deletePost }),
+    [state],
   );
+
+  return <PostContext.Provider value={value}>{children}</PostContext.Provider>;
 };
 
 export default PostContext;

@@ -34,7 +34,26 @@ export default function postReducer(state = initialState, action) {
         error: null,
         isLoading: false,
       };
-
+    case postActionTypes.GET_POST:
+      return {
+        ...state,
+        currentPost: action.payload.currentPost,
+        error: null,
+        isLoading: false,
+      };
+    case postActionTypes.DELETE_POST:
+      return {
+        ...state,
+        posts: state.posts.filter(
+          (post) => post._id !== action.payload?.postId,
+        ),
+        currentPost:
+          state.currentPost?._id === action.payload?.postId
+            ? {}
+            : state.currentPost,
+        error: null,
+        isLoading: false,
+      };
     case postActionTypes.SET_LOADING:
       return {
         ...state,

@@ -68,13 +68,11 @@ const Navbar = () => {
                 <button className="btn-primary btn-sm w-full px-8">
                   Register
                 </button>
-                ▐
               </NavLink>
               <NavLink to="/login">
                 <button className="btn-secondary btn-sm w-full px-8">
                   Login
                 </button>
-                ▐
               </NavLink>
             </>
           )}

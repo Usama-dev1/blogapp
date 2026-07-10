@@ -115,7 +115,8 @@ api.interceptors.response.use(
           },
         );
 
-        const newToken = data?.accessToken ?? data?.token;
+        const newToken = data?.data?.accessToken;
+
         setStoredToken(newToken);
         api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 

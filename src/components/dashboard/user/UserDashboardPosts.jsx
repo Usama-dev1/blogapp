@@ -1,24 +1,51 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { Link } from "react-router";
 import { useAuth } from "../../../hooks/useAuth";
 import { usePostHook } from "../../../hooks/usePostHook";
+import ConfirmationModal from "../../common/ConfirmationModal";
+import ViewPostModal from "../../common/ViewPostModal";
+import EditPostModal from "../../common/EditPostModal";
 const UserDashboardPosts = () => {
   const {
     state: { user },
   } = useAuth();
   const {
-    state: { posts },
+    state: { posts, isLoading, currentPost },
+    deletePost,
+    getPostById,
   } = usePostHook();
-  console.log(user, posts);
+  const [pId, setPId] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openViewModal, setOpenViewModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const userPosts = useMemo(() => {
     if (!user?.id || !posts) return [];
     return posts.filter((post) => post.userId === user.id);
-    // if author is stored as a raw id string instead of populated object:
-    // return posts.filter((post) => post.author === user._id || post.authorId === user._id);
   }, [posts, user]);
-  console.log(userPosts);
   if (userPosts.length === 0) return <div>No user posts</div>;
+
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(pId);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setOpenDeleteModal(false);
+    }
+  };
+  const handleViewPost = async (id) => {
+    try {
+      await getPostById(id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log(currentPost);
+    }
+  };
+
+  console.log(pId);
   return (
-    <div className="mx-5 flex justify-center items-center w-full">
+    <div className="mx-auto flex justify-center items-center w-full px-5">
       <div className="relative flex flex-col text-center w-full text-body-text bg-primary">
         <div className="relative mx-4 mt-4 overflow-hidden text-body-text bg-primary">
           <div className="flex items-center justify-between ">
@@ -50,10 +77,14 @@ const UserDashboardPosts = () => {
             </thead>
             <tbody>
               {userPosts.map((p) => (
-                <tr>
+                <tr key={p._id}>
                   <td className="p-4 w-20 border-b border-border">
                     <div className="flex  items-center justify-center gap-3">
-                      <span className="">{p.title.slice(0, 50)}</span>
+                      <Link onClick={() => setOpenViewModal(true)}>
+                        <span className="" onClick={() => openViewModal(true)}>
+                          {p.title.slice(0, 50)}
+                        </span>
+                      </Link>
                     </div>
                   </td>
                   <td className="p-4 w-20 border-b border-border">
@@ -66,13 +97,34 @@ const UserDashboardPosts = () => {
 
                   <td className="p-4 w-20 border-b border-border">
                     <div className="flex flex-col sm:flex-row items-center justify-center  w-full gap-2">
-                      <button className=" btn-icon btn-sm" type="button">
+                      <button
+                        className=" btn-icon btn-sm"
+                        type="button"
+                        onClick={() => {
+                          setOpenViewModal(true);
+                          handleViewPost(p._id);
+                        }}
+                      >
                         View
                       </button>
-                      <button className="btn-secondary btn-sm" type="button">
+                      <button
+                        className="btn-secondary btn-sm"
+                        type="button"
+                        onClick={() => {
+                          setOpenEditModal(true);
+                          handleViewPost(p._id);
+                        }}
+                      >
                         Edit
                       </button>
-                      <button className="btn-danger btn-sm" type="button">
+                      <button
+                        className="btn-danger btn-sm"
+                        type="button"
+                        onClick={() => {
+                          setOpenDeleteModal(true);
+                          setPId(p._id);
+                        }}
+                      >
                         Delete
                       </button>
                     </div>
@@ -100,6 +152,25 @@ const UserDashboardPosts = () => {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+        loading={isLoading}
+        handleConfirmDelete={handleDeletePost}
+      />
+      <ViewPostModal
+        isOpen={openViewModal}
+        postId={pId}
+        onClose={() => setOpenViewModal(false)}
+        loading={isLoading}
+        post={currentPost}
+      />
+      <EditPostModal
+        isOpen={openEditModal}
+        loading={isLoading}
+        post={currentPost}
+        onClose={() => setOpenEditModal(false)}
+      />
     </div>
   );
 };

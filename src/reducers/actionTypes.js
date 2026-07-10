@@ -6,7 +6,7 @@ export const authActionTypes = {
 };
 
 export const postActionTypes = {
-  SET_POSTS: "SET_POSTS",
+  GET_POST: "GET_POST",
   SET_POST: "SET_POST",
   SET_ERROR: "SET_ERROR",
   GET_POSTS_SUCCESS: "GET_POSTS_SUCCESS",
