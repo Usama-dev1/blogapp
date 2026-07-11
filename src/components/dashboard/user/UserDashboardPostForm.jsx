@@ -36,13 +36,14 @@ const UserDashboardPostForm = () => {
     setCategoryId("");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleCreatePost = async (e) => {
+    if (!title || !content) return;
+
     const errs = validate();
     setFieldErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
-    const response = await createPost({
+    await createPost({
       title: title.trim(),
       categoryId,
       content: content.trim(),
@@ -53,19 +54,22 @@ const UserDashboardPostForm = () => {
   //save the post as draft with draft as true
   const handleSaveDraft = async () => {
     if (!title || !content) return;
+    const errs = validate();
+    setFieldErrors(errs);
+    if (Object.keys(errs).length > 0) return;
     await createPost({
       title: title.trim(),
       categoryId: categoryId || null,
       content: content.trim(),
       draft: true,
     });
+    setFieldErrors(errs);
+
+    resetForm();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full min-h-screen flex flex-col items-start gap-8 p-10 justify-center"
-    >
+    <form className="w-full min-h-screen flex flex-col items-start gap-8 p-10 justify-center">
       {/* Input a Title */}
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="title" className="text-lg font-semibold">
@@ -141,22 +145,17 @@ const UserDashboardPostForm = () => {
           type="button"
           onClick={handleSaveDraft}
           disabled={isLoading}
-          className="btn-secondary btn-md"
+          className="btn-secondary btn-md disabled:bg-gray-300"
         >
           Save Draft
         </button>
         <button
-          type="submit"
+          type="button"
+          onClick={handleCreatePost}
           disabled={isLoading}
-          className="btn-primary btn-md flex items-center gap-2"
+          className="btn-primary btn-md disabled:bg-gray-300"
         >
-          {isLoading ? (
-            <span>
-              <ImSpinner3 className="animate-spin" />
-            </span>
-          ) : (
-            "Publish Post"
-          )}
+          Publish Post
         </button>
       </div>
 

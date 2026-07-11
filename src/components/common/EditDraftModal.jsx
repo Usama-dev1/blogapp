@@ -4,7 +4,7 @@ import { ImSpinner3 } from "react-icons/im";
 import { useCategoryHook } from "../../hooks/useCategoryHook";
 import { usePostHook } from "../../hooks/usePostHook";
 
-const EditPostModal = ({ isOpen, onClose, loading, post }) => {
+const EditDraftModal = ({ isOpen, onClose, loading, post }) => {
   //set content check length for validation
   const TITLE_MIN = 80;
   const CONTENT_MIN = 150;
@@ -13,7 +13,7 @@ const EditPostModal = ({ isOpen, onClose, loading, post }) => {
     state: { category },
   } = useCategoryHook();
 
-  const { state, updatePost } = usePostHook();
+  const { state, updateDraftPost, publishDraftPost } = usePostHook();
   const { isLoading, error } = state;
 
   const [title, setTitle] = useState("");
@@ -46,10 +46,27 @@ const EditPostModal = ({ isOpen, onClose, loading, post }) => {
     setFieldErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
-    await updatePost(post._id, {
+    await updateDraftPost(post._id, {
       title: title.trim(),
       categoryId,
       content: content.trim(),
+      draft: false,
+    });
+    setFieldErrors({});
+    onClose();
+  };
+
+  const handleSaveDraft = async (e) => {
+    e.preventDefault();
+    const errs = validate();
+    setFieldErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
+    await publishDraftPost(post._id, {
+      title: title.trim(),
+      categoryId,
+      content: content.trim(),
+      draft: true,
     });
     setFieldErrors({});
     onClose();
@@ -81,10 +98,7 @@ const EditPostModal = ({ isOpen, onClose, loading, post }) => {
           </button>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="w-full flex flex-col items-start gap-6 overflow-y-auto flex-1 p-2"
-        >
+        <form className="w-full flex flex-col items-start gap-6 overflow-y-auto flex-1 p-2">
           {/* post title */}
           <div className="w-full flex flex-col gap-2">
             <label htmlFor="title" className="text-lg font-semibold">
@@ -161,7 +175,22 @@ const EditPostModal = ({ isOpen, onClose, loading, post }) => {
 
           <div className="flex gap-4 mt-4 items-center">
             <button
-              type="submit"
+              type="button"
+              disabled={isLoading}
+              onClick={handleSaveDraft}
+              className="btn-primary btn-md flex items-center gap-2"
+            >
+              {isLoading ? (
+                <span>
+                  <ImSpinner3 className="animate-spin" />
+                </span>
+              ) : (
+                "Publish Post"
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handleSubmit}
               disabled={isLoading}
               className="btn-primary btn-md flex items-center gap-2"
             >
@@ -170,7 +199,7 @@ const EditPostModal = ({ isOpen, onClose, loading, post }) => {
                   <ImSpinner3 className="animate-spin" />
                 </span>
               ) : (
-                "Save Changes"
+                "Save Draft"
               )}
             </button>
           </div>
@@ -189,4 +218,4 @@ const EditPostModal = ({ isOpen, onClose, loading, post }) => {
   );
 };
 
-export default EditPostModal;
+export default EditDraftModal;
