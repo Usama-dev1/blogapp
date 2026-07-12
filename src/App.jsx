@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import Homepage from "./pages/HomePage";
+import HomePage from "./pages/HomePage";
 import PostDetailsPage from "./pages/PostDetailsPage";
 import MainLayout from "./layouts/MainLayout";
 import UserDashBoardLayout from "./layouts/UserDashboardLayout";
@@ -15,7 +15,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route index element={<Homepage />} />
+          <Route index element={<HomePage />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/post/:id" element={<PostDetailsPage />} />
