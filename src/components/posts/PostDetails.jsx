@@ -1,9 +1,8 @@
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import { CiShare1 } from "react-icons/ci";
 import { useEffect, useMemo } from "react";
-import { FaComment } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { GoDotFill } from "react-icons/go";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { usePostHook } from "../../hooks/usePostHook";
 import { useLikesHook } from "../../hooks/useLikesHook";
 import { useAuth } from "../../hooks/useAuth";
@@ -57,6 +56,13 @@ const PostDetails = () => {
 
   return (
     <div className="body-width">
+      <div className="w-full">
+        <Link to="/">
+          <button className="btn-secondary btn-md flex justify-start items-center gap-2">
+            <FaArrowLeft /> Go Back
+          </button>
+        </Link>
+      </div>
       <h1 className="heading-main p-4">{title}</h1>
 
       <p className="prose-text p-4 font-article whitespace-pre-line">

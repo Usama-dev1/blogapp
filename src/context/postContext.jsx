@@ -1,6 +1,7 @@
 import { createContext, useReducer, useEffect, useMemo } from "react";
 import { api } from "../services/interceptors.js";
-
+import { useContext } from "react";
+import AuthContext from "./authContext.jsx";
 import { initialState } from "../reducers/postReducer";
 import postReducer from "../reducers/postReducer";
 import { postActionTypes } from "../reducers/actionTypes";
@@ -26,6 +27,9 @@ const errorMessage = (error, fallback) =>
   error?.response?.data?.message || error?.message || fallback;
 
 export const PostProvider = ({ children }) => {
+  const {
+    state: { isAuthenticated },
+  } = useContext(AuthContext);
   const [state, dispatch] = useReducer(postReducer, initialState);
 
   const createPost = async (postData) => {
@@ -265,8 +269,8 @@ export const PostProvider = ({ children }) => {
   };
   useEffect(() => {
     getPosts();
-    getDraftPosts();
-  }, []);
+    if (isAuthenticated) getDraftPosts();
+  }, [isAuthenticated]);
 
   const value = useMemo(
     () => ({
