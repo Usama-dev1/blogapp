@@ -1,10 +1,11 @@
+//auth actions
 export const authActionTypes = {
   SET_USER: "SET_USER",
   LOGOUT: "LOGOUT",
   SET_ERROR: "SET_ERROR",
   SET_LOADING: "SET_LOADING",
 };
-
+//post actions
 export const postActionTypes = {
   GET_POST: "GET_POST",
   SET_ERROR: "SET_ERROR",
@@ -19,10 +20,33 @@ export const postActionTypes = {
   UPDATE_DRAFT_POST: "UPDATE_DRAFT_POST",
   PUBLISH_DRAFT_POST: "PUBLISH_DRAFT_POST",
 };
+
+//comment actions
+export const commentActionTypes = {
+  CREATE_COMMENT: "CREATE_COMMENT",
+  UPDATE_COMMENT: "UPDATE_COMMENT",
+  DELETE_COMMENT: "DELETE_COMMENT",
+  GET_COMMENTS: "GET_COMMENTS",
+  GET_COMMENT: "GET_COMMENT",
+  SET_LOADING: "SET_LOADING",
+  SET_ERROR: "SET_ERROR",
+};
+
+//category actions
 export const categoryActionTypes = {
   GET_CATEGORY_SUCCESS: "GET_CATEGORY_SUCCESS",
-  SET_LOADING: "SET_LOADING",
   CREATE_CATEGORY: "CREATE_CATEGORY",
   UPDATE_CATEGORY: "UPDATE_CATEGORY",
   DELETE_CATEGORY: "DELETE_CATEGORY",
+  SET_LOADING: "SET_LOADING",
+  SET_ERROR: "SET_ERROR",
+};
+
+//like actions
+export const likeActionTypes = {
+  GET_LIKES: "GET_LIKES",
+  CREATE_LIKE: "CREATE_LIKE",
+  DELETE_LIKE: "DELETE_LIKE",
+  SET_LOADING: "SET_LOADING",
+  SET_ERROR: "SET_ERROR",
 };

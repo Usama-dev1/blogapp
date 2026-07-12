@@ -109,9 +109,7 @@ export const PostProvider = ({ children }) => {
       const response = await api.get(`/post/${id}`);
       const { data, success } = response.data;
       if (success && data) {
-        console.log("test2", data, success);
         dispatch({ type: GET_POST, payload: { currentPost: data } });
-        console.log("test3", data);
       } else {
         dispatch({
           type: SET_ERROR,
@@ -152,7 +150,6 @@ export const PostProvider = ({ children }) => {
     try {
       const response = await api.get(`/post/drafts`);
       const { data, success, message } = response.data;
-      console.log("get draft all posts", data);
 
       if (success && data?.posts) {
         dispatch({
@@ -180,9 +177,7 @@ export const PostProvider = ({ children }) => {
       const response = await api.get(`/post/drafts/${id}`);
       const { data, success } = response.data;
       if (success && data) {
-        console.log("test2", data, success);
         dispatch({ type: GET_DRAFT_POST, payload: { currentDraftPost: data } });
-        console.log("get draft single post", data);
       } else {
         dispatch({
           type: SET_ERROR,

@@ -113,10 +113,10 @@ export default function postReducer(state = initialState, action) {
         draftPosts: state.draftPosts.filter(
           (post) => post._id !== action.payload?.postId,
         ),
-        currentPost:
-          state.currentPost?._id === action.payload?.postId
+        currentDraftPost:
+          state.currentDraftPost?._id === action.payload?.postId
             ? {}
-            : state.currentPost,
+            : state.currentDraftPost,
         error: null,
         isLoading: false,
       };
@@ -128,7 +128,7 @@ export default function postReducer(state = initialState, action) {
             ? action.payload.currentDraftPost
             : post,
         ),
-        currentPost: action.payload.currentDraftPost,
+        currentDraftPost: action.payload.currentDraftPost,
         error: null,
         isLoading: false,
       };
