@@ -1,13 +1,14 @@
-import Navbar from "../components/common/Navbar";
-import PostCard from "../components/posts/PostCard";
+import { useParams } from "react-router";
 import PostDetails from "../components/posts/PostDetails";
 import CommentSection from "../components/comments/CommentSection";
-PostCard;
+
 const PostDetailsPage = () => {
+  const { id } = useParams();
+
   return (
     <>
       <PostDetails />
-      <CommentSection />
+      <CommentSection postId={id} />
     </>
   );
 };

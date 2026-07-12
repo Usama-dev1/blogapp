@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
+
 const CommentInputCard = ({ loggedUser, onPost }) => {
   const [draft, setDraft] = useState("");
 

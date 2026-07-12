@@ -5,23 +5,12 @@ const CommentCard = ({
   email,
   text,
   timestamp,
+  canManage,
   onSave,
   onDelete,
 }) => {
-  const commentDummy = {
-    name: "usama",
-    email: "usama@gmail.com",
-    text: "hell this is a test comment for checking",
-    timestamp: "24/7/2026",
-  };
-  const loggedUser = true;
   const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(commentDummy.text || "");
-
-  text = commentDummy.text;
-  timestamp = commentDummy.timestamp;
-  email = commentDummy.email;
-  username = commentDummy.name;
+  const [draft, setDraft] = useState(text || "");
 
   if (isEditing) {
     return (
@@ -58,7 +47,7 @@ const CommentCard = ({
 
   return (
     <div className="flex flex-col comment-width bg-primary rounded-3xl p-6 shadow-sm">
-      {loggedUser && (
+      {canManage && (
         <div className="flex justify-end gap-3 py-2">
           <button
             className="btn-secondary btn-sm"

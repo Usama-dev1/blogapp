@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useMemo } from "react";
 import { api } from "../services/interceptors.js";
 import { initialState } from "../reducers/likeReducer";
 import likeReducer from "../reducers/likeReducer";
@@ -7,7 +7,7 @@ import { likeActionTypes } from "../reducers/actionTypes";
 const { GET_LIKES, CREATE_LIKE, DELETE_LIKE, SET_ERROR, SET_LOADING } =
   likeActionTypes;
 
-const LikeContext = createContext();
+export const LikeContext = createContext();
 
 const errorMessage = (error, fallback) =>
   error?.response?.data?.message || error?.message || fallback;
@@ -18,7 +18,9 @@ export const LikeProvider = ({ children }) => {
   const getLikes = async (postId) => {
     dispatch({ type: SET_LOADING, payload: true });
     try {
-      const response = await api.get(`/post/${postId}/like`);
+      const response = await api.get(`/post/${postId}/likes`);
+      console.log("Like response:", response.data);
+
       const { data, success, message, likeCount } = response.data;
       if (success && data) {
         dispatch({ type: GET_LIKES, payload: { likes: data, likeCount } });
@@ -29,9 +31,10 @@ export const LikeProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      const msg = errorMessage(error, "failed to fetch likes");
-      dispatch({ type: SET_ERROR, payload: msg });
-      console.error("Error during fetch likes:", error);
+      dispatch({
+        type: SET_ERROR,
+        payload: errorMessage(error, "failed to fetch likes"),
+      });
       throw error;
     } finally {
       dispatch({ type: SET_LOADING, payload: false });
@@ -41,19 +44,18 @@ export const LikeProvider = ({ children }) => {
   const createLike = async (postId) => {
     dispatch({ type: SET_LOADING, payload: true });
     try {
-      const response = await api.post(`/post/${postId}/like`);
+      const response = await api.post(`/post/${postId}/likes`);
       const { data, success, message, likeCount } = response.data;
       if (success && data) {
         dispatch({ type: CREATE_LIKE, payload: { like: data, likeCount } });
       } else {
-        dispatch({
-          type: SET_ERROR,
-          payload: message || "failed to add like",
-        });
+        dispatch({ type: SET_ERROR, payload: message || "failed to add like" });
       }
     } catch (error) {
-      const msg = errorMessage(error, "failed to add like");
-      dispatch({ type: SET_ERROR, payload: msg });
+      dispatch({
+        type: SET_ERROR,
+        payload: errorMessage(error, "failed to add like"),
+      });
       throw error;
     } finally {
       dispatch({ type: SET_LOADING, payload: false });
@@ -63,10 +65,13 @@ export const LikeProvider = ({ children }) => {
   const removeLike = async (postId) => {
     dispatch({ type: SET_LOADING, payload: true });
     try {
-      const response = await api.delete(`/post/${postId}/like`);
-      const { success, message, likeCount } = response.data;
+      const response = await api.delete(`/post/${postId}/likes`);
+      const { data, success, message, likeCount } = response.data;
       if (success) {
-        dispatch({ type: DELETE_LIKE, payload: { likeId: postId, likeCount } });
+        dispatch({
+          type: DELETE_LIKE,
+          payload: { likeId: data._id, likeCount },
+        });
       } else {
         dispatch({
           type: SET_ERROR,
@@ -74,21 +79,26 @@ export const LikeProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      const msg = errorMessage(error, "failed to remove like");
-      dispatch({ type: SET_ERROR, payload: msg });
+      dispatch({
+        type: SET_ERROR,
+        payload: errorMessage(error, "failed to remove like"),
+      });
       throw error;
     } finally {
       dispatch({ type: SET_LOADING, payload: false });
     }
   };
-
-  return (
-    <LikeContext.Provider
-      value={{ state, dispatch, getLikes, createLike, removeLike }}
-    >
-      {children}
-    </LikeContext.Provider>
+  const value = useMemo(
+    () => ({
+      state,
+      dispatch,
+      getLikes,
+      createLike,
+      removeLike,
+    }),
+    [state],
   );
+  return <LikeContext.Provider value={value}>{children}</LikeContext.Provider>;
 };
 
 export default LikeContext;

@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import LikeContext from "../context/LikeContext.jsx";
-export const useCategoryHook = () => {
+import LikeContext from "../context/likeContext";
+export const useLikesHook = () => {
   if (!LikeContext) {
     throw new Error("No Post Context");
   }
