@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import HomePage from "./pages/HomePage";
 import PostDetailsPage from "./pages/PostDetailsPage";
 import MainLayout from "./layouts/MainLayout";
 import UserDashBoardLayout from "./layouts/UserDashboardLayout";
@@ -10,6 +9,7 @@ import UserListTable from "./components/dashboard/user/UserListTable";
 import UserDashboardPostForm from "./components/dashboard/user/UserDashboardPostForm";
 import LoginForm from "./components/auth/loginForm";
 import RegisterForm from "./components/auth/registerForm";
+import HomePage from "./pages/HomePage2";
 const App = () => {
   return (
     <BrowserRouter>
