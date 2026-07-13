@@ -6,10 +6,41 @@ import { CiHome } from "react-icons/ci";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { MdOutlineDrafts } from "react-icons/md";
 import { FaList } from "react-icons/fa6";
+import { AiTwotoneDashboard } from "react-icons/ai";
+
+import { FaUsers } from "react-icons/fa6";
+
+import { useAuth } from "./../../../hooks/useAuth";
 
 const UserDashBoardNav = () => {
+  const { logout, state: authState } = useAuth();
+  const { user, isLoading } = authState;
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const closeMenu = () => setMenuOpen(false);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+    closeMenu();
+  };
+
+  if (isLoading) return null;
+
+  const superAdmin = user.role === "super_admin";
+  const admin = user.role === "admin";
+
   const links = [
-    { name: "Home", icon: <CiHome />, path: "/dashboard/user", end: true },
+    {
+      name: "Dashboard",
+      icon: <AiTwotoneDashboard />,
+      path: "/dashboard/user",
+      end: true,
+    },
+    { name: "Home", icon: <CiHome />, path: "/", end: true },
+
     {
       name: "Write",
       icon: <MdOutlinePostAdd />,
@@ -20,18 +51,28 @@ const UserDashBoardNav = () => {
       icon: <MdOutlineDrafts />,
       path: "/dashboard/user/drafts",
     },
-    { name: "All posts", icon: <FaList />, path: "/dashboard/user/all-posts" },
+    {
+      name: "All posts",
+      icon: <FaList />,
+      path: "/dashboard/user/all-posts",
+    },
   ];
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  if (admin) {
+    links.push({
+      name: "Manage Users",
+      icon: <FaList />,
+      path: "/dashboard/admin/manage-users",
+    });
+  }
 
-  const closeMenu = () => setMenuOpen(false);
-
-  const handleLogout = () => {
-    navigate("/");
-    closeMenu();
-  };
+  if (superAdmin) {
+    links.push({
+      name: "Manage Users",
+      icon: <FaUsers />,
+      path: "/dashboard/admin/users",
+    });
+  }
 
   return (
     <nav className="sticky top-0 z-50 bg-blue-muted border-b border-border px-4 sm:px-6 lg:px-8 h-16 flex justify-between text-center items-center mb-2">
@@ -39,15 +80,14 @@ const UserDashBoardNav = () => {
         <NavLink to="/">BlogApp</NavLink>
       </div>
       <div>
-        {" "}
-        <NavLink to="/dashboard">
-          <button className="btn-primary btn-md text-xs! ">
+        <NavLink to="/dashboard/user">
+          <button className="btn-primary btn-md text-xs!">
             Go to Dashboard
           </button>
         </NavLink>
       </div>
       <button
-        className="md:hidden z-50 relative  p-1 rounded-lg transition-colors focus:outline-none"
+        className="md:hidden z-50 relative p-1 rounded-lg transition-colors focus:outline-none"
         onClick={() => setMenuOpen(!menuOpen)}
       >
         {menuOpen ? (
@@ -91,6 +131,7 @@ const UserDashBoardNav = () => {
                   {link.name}
                 </NavLink>
               ))}
+
               <div>
                 <button onClick={handleLogout} className="btn-danger btn-sm">
                   Logout

@@ -10,6 +10,7 @@ import UserDashboardPostForm from "./components/dashboard/user/UserDashboardPost
 import LoginForm from "./components/auth/loginForm";
 import RegisterForm from "./components/auth/registerForm";
 import HomePage from "./pages/HomePage2";
+import UserDashboardAnalytics from "./components/dashboard/user/UserDashboardAnalytics";
 const App = () => {
   return (
     <BrowserRouter>
@@ -30,7 +31,10 @@ const App = () => {
               path="/dashboard/user/create-post"
               element={<UserDashboardPostForm />}
             />
-            <Route path="/dashboard/user" element={<UserListTable />} />
+            <Route
+              path="/dashboard/user"
+              element={<UserDashboardAnalytics />}
+            />
             <Route
               path="/dashboard/user/drafts"
               element={<UserDashboardDrafts />}
@@ -39,6 +43,17 @@ const App = () => {
               path="/dashboard/user/all-posts"
               element={<UserDashboardPosts />}
             />
+
+            <Route
+              element={
+                <ProtectedRoute allowedRoles={["admin", "super_admin"]} />
+              }
+            >
+              <Route
+                path="/dashboard/admin/users"
+                element={<UserListTable />}
+              />
+            </Route>
           </Route>
         </Route>
       </Routes>

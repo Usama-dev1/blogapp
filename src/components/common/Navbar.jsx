@@ -11,7 +11,9 @@ const Navbar = () => {
   return (
     <nav className="relative bg-primary border-b border-border">
       <div className="body-width flex items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
-        <div className="text-2xl font-bold text-brand">BlogApp</div>
+        <NavLink to="/">
+          <div className="text-2xl font-bold text-brand">BlogApp</div>
+        </NavLink>
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center space-x-8">

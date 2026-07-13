@@ -32,7 +32,7 @@ const PostCard = ({ post }) => {
         </div>
 
         <div className="w-full flex justify-end">
-          <NavLink to={`/${post._id}`}>
+          <NavLink to={`/post/${post._id}`}>
             <button className="text-link hover:text-link-hover hover:cursor-pointer font-semibold">
               read more...
             </button>

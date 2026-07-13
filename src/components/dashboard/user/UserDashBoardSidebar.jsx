@@ -2,16 +2,29 @@ import { NavLink, useNavigate } from "react-router";
 import { CiHome } from "react-icons/ci";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { MdOutlineDrafts } from "react-icons/md";
+import { FaUsers } from "react-icons/fa6";
+import { AiTwotoneDashboard } from "react-icons/ai";
 import { FaList } from "react-icons/fa6";
 import { useAuth } from "../../../hooks/useAuth";
 const UserDashBoardSidebar = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, state: authState } = useAuth();
+  const { user } = authState;
+
+  const admin = user.role === "admin";
+  const superAdmin = user.role === "super_admin";
+
   const handleLogout = async () => {
     await logout();
     navigate("/login");
   };
   const links = [
+    {
+      name: "Dashboard",
+      icon: <AiTwotoneDashboard />,
+      path: "/dashboard/user",
+      end: true,
+    },
     { name: "Home", icon: <CiHome />, path: "/", end: true },
     {
       name: "Write",
@@ -25,6 +38,22 @@ const UserDashBoardSidebar = () => {
     },
     { name: "My posts", icon: <FaList />, path: "/dashboard/user/all-posts" },
   ];
+
+  if (admin) {
+    links.push({
+      name: "Admin Panel",
+      icon: <FaList />,
+      path: "/dashboard/admin/panel",
+    });
+  }
+
+  if (superAdmin) {
+    links.push({
+      name: "Manage Users",
+      icon: <FaUsers />,
+      path: "/dashboard/admin/users",
+    });
+  }
 
   return (
     <aside className="w-full h-screen p-2 flex flex-col justify-between items-center border-r border-border font-ui">

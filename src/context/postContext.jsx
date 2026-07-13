@@ -109,6 +109,7 @@ export const PostProvider = ({ children }) => {
   };
   const getPostById = async (id) => {
     dispatch({ type: SET_LOADING, payload: true });
+    dispatch({ type: SET_ERROR, payload: null });
     try {
       const response = await api.get(`/post/${id}`);
       const { data, success } = response.data;
