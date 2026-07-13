@@ -1,6 +1,47 @@
-import React, { useMemo } from "react";
+import { useState, useEffect } from "react";
+import { api } from "../../services/interceptors";
 
 const UserListTable = () => {
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [updatingId, setUpdatingId] = useState(null);
+
+  const fetchUsers = async () => {
+    try {
+      setIsLoading(true);
+      const res = await api.get("/auth/users");
+      setUsers(res.data.data);
+    } catch (err) {
+      console.error("[fetchUsers] Error:", err);
+      setError("Failed to load users");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleRoleChange = async (id, newRole) => {};
+
+  const formatDate = (dateStr) => {
+    return new Date(dateStr).toLocaleDateString();
+  };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-full mx-auto p-4 text-muted-text">
+        Loading users...
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="max-w-full mx-auto p-4 text-red-500">{error}</div>;
+  }
+
   return (
     <div className="max-w-full mx-auto">
       <div className="relative flex flex-col w-full text-body-text bg-primary">
@@ -8,7 +49,7 @@ const UserListTable = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-body-text">
-                User List
+                Users :{users.length}
               </h3>
             </div>
           </div>
@@ -18,90 +59,89 @@ const UserListTable = () => {
             <thead>
               <tr>
                 <th className="p-4 cursor-pointer border-y border-border bg-secondary hover:bg-secondary/50">
-                  <p className="flex items-center justify-between gap-2 text-sm  text-muted-text">
+                  <p className="flex items-center justify-between gap-2 text-sm text-muted-text">
                     User
                   </p>
                 </th>
                 <th className="p-4 cursor-pointer border-y border-border bg-secondary hover:bg-secondary/50">
-                  <p className="flex items-center justify-between gap-2 text-sm  text-muted-text">
+                  <p className="flex items-center justify-between gap-2 text-sm text-muted-text">
                     Role
                   </p>
                 </th>
                 <th className="p-4 cursor-pointer border-y border-border bg-secondary hover:bg-secondary/50">
-                  <p className="flex items-center justify-between gap-2 text-sm  text-muted-text">
+                  <p className="flex items-center justify-between gap-2 text-sm text-muted-text">
                     Status
                   </p>
                 </th>
                 <th className="p-4 cursor-pointer border-y border-border bg-secondary hover:bg-secondary/50">
-                  <p className="flex items-center justify-between gap-2 text-sm  text-muted-text">
+                  <p className="flex items-center justify-between gap-2 text-sm text-muted-text">
                     Joined Date
                   </p>
                 </th>
                 <th className="p-4 cursor-pointer border-y border-border bg-secondary hover:bg-secondary/50">
-                  <p className="flex items-center justify-between gap-2 text-sm  text-muted-text"></p>
+                  <p className="flex items-center justify-between gap-2 text-sm text-muted-text"></p>
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="p-4 border-b border-border">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
-                      alt="John Michael"
-                      className="relative inline-block h-9 w-9 !rounded-full object-cover object-center"
-                    />
+              {users.map((user) => (
+                <tr key={user._id}>
+                  <td className="p-4 border-b border-border">
                     <div className="flex flex-col">
                       <p className="text-sm font-semibold text-body-text">
-                        John Michael
+                        {user.username}
                       </p>
-                      <p className="text-sm text-muted-text">
-                        john@creative-tim.com
-                      </p>
+                      <p className="text-sm text-muted-text">{user.email}</p>
                     </div>
-                  </div>
-                </td>
-                <td className="p-4 border-b border-border">
-                  <div className="flex flex-col">
-                    <p className="text-sm font-semibold text-body-text">
-                      Manager
+                  </td>
+                  <td className="p-4 border-b border-border">
+                    <p className="text-sm font-semibold text-body-text capitalize">
+                      {user.role.replace("_", " ")}
                     </p>
-                    <p className="text-sm text-muted-text">Organization</p>
-                  </div>
-                </td>
-                <td className="p-4 border-b border-border">
-                  <div className="w-max">
-                    <div className="relative grid items-center px-2 py-1 text-xs font-bold text-green-900 uppercase rounded-md  bg-green-500/20">
-                      <span>online</span>
+                  </td>
+                  <td className="p-4 border-b border-border">
+                    <div className="w-max">
+                      <div
+                        className={`relative grid items-center px-2 py-1 text-xs font-bold uppercase rounded-md ${
+                          user.isDeleted
+                            ? "text-red-900 bg-red-500/20"
+                            : "text-green-900 bg-green-500/20"
+                        }`}
+                      >
+                        <span>{user.isDeleted ? "deleted" : "active"}</span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="p-4 border-b border-border">
-                  <p className="text-sm text-muted-text">23/04/18</p>
-                </td>
-                <td className="p-4 border-b border-border">
-                  <button className="btn-primary btn-sm">edit</button>
-                </td>
-              </tr>
+                  </td>
+                  <td className="p-4 border-b border-border">
+                    <p className="text-sm text-muted-text">
+                      {formatDate(user.createdAt)}
+                    </p>
+                  </td>
+                  <td className="p-4 border-b border-border">
+                    {user.role === "super_admin" ? (
+                      <span className="text-xs text-muted-text">—</span>
+                    ) : user.role === "admin" ? (
+                      <button
+                        onClick={() => handleRoleChange(user._id, "user")}
+                        disabled={updatingId === user._id}
+                        className="btn-secondary btn-sm"
+                      >
+                        {updatingId === user._id ? "..." : "Remove Admin"}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleRoleChange(user._id, "admin")}
+                        disabled={updatingId === user._id}
+                        className="btn-primary btn-sm"
+                      >
+                        {updatingId === user._id ? "..." : "Make Admin"}
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
-        </div>
-        <div className="flex items-center justify-between p-3">
-          <p className="block text-sm text-muted-text">Page 1 of 10</p>
-          <div className="flex gap-1">
-            <button
-              className="rounded border border-border py-2.5 px-3 text-center text-xs font-semibold text-muted-text"
-              type="button"
-            >
-              Previous
-            </button>
-            <button
-              className="rounded border border-border py-2.5 px-3 text-center text-xs font-semibold text-muted-text"
-              type="button"
-            >
-              Next
-            </button>
-          </div>
         </div>
       </div>
     </div>

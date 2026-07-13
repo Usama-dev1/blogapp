@@ -5,7 +5,7 @@ import MainLayout from "./layouts/MainLayout";
 import UserDashBoardLayout from "./layouts/UserDashboardLayout";
 import UserDashboardPosts from "./components/dashboard/user/UserDashboardPosts";
 import UserDashboardDrafts from "./components/dashboard/user/UserDashboardDrafts";
-import UserListTable from "./components/dashboard/user/UserListTable";
+import UserListTable from "./components/super-admin/UserListTable";
 import UserDashboardPostForm from "./components/dashboard/user/UserDashboardPostForm";
 import LoginForm from "./components/auth/loginForm";
 import RegisterForm from "./components/auth/registerForm";

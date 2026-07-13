@@ -58,13 +58,13 @@ const UserDashBoardNav = () => {
     },
   ];
 
-  if (admin) {
-    links.push({
-      name: "Manage Users",
-      icon: <FaList />,
-      path: "/dashboard/admin/manage-users",
-    });
-  }
+  // if (admin) {
+  //   links.push({
+  //     name: "Manage Users",
+  //     icon: <FaList />,
+  //     path: "/dashboard/admin/manage-users",
+  //   });
+  // }
 
   if (superAdmin) {
     links.push({

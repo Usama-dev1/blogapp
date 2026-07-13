@@ -39,13 +39,13 @@ const UserDashBoardSidebar = () => {
     { name: "My posts", icon: <FaList />, path: "/dashboard/user/all-posts" },
   ];
 
-  if (admin) {
-    links.push({
-      name: "Admin Panel",
-      icon: <FaList />,
-      path: "/dashboard/admin/panel",
-    });
-  }
+  // if (admin) {
+  //   links.push({
+  //     name: "Admin Panel",
+  //     icon: <FaList />,
+  //     path: "/dashboard/admin/panel",
+  //   });
+  // }
 
   if (superAdmin) {
     links.push({
