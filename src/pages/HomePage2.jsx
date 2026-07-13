@@ -1,18 +1,33 @@
 import { usePostHook } from "../hooks/usePostHook";
 import PostCard from "../components/posts/PostCard";
-
+import Pagination from "../components/common/Pagination";
 const HomePage = () => {
-  const { state } = usePostHook();
-  const { posts, isLoading, error } = state;
+  const {
+    state: { posts, error, isLoading, pagination },
 
+    getPosts,
+  } = usePostHook();
+  const handlePageChange = (newPage) => {
+    getPosts(newPage, pagination.limit);
+  };
   if (isLoading) return <div>Loading posts...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
-      {posts.map((p) => (
-        <PostCard key={p._id} post={p} />
-      ))}
+    <div className="h-screen flex-col">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+        {posts.map((p) => (
+          <PostCard key={p._id} post={p} />
+        ))}
+      </div>
+      <div className="w-full">
+        <Pagination
+          page={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+          disabled={isLoading}
+        />
+      </div>
     </div>
   );
 };

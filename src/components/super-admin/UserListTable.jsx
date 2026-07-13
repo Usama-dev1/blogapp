@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
+import ConfirmationModal from "../common/ConfirmationModal";
 import { api } from "../../services/interceptors";
+import { useAuth } from "../../hooks/useAuth";
+import { formatDate } from "../../util/formatDate";
 
 const UserListTable = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const { state: authState } = useAuth();
+  const { user, isAuthenticated } = authState;
 
   const fetchUsers = async () => {
     try {
@@ -19,15 +26,72 @@ const UserListTable = () => {
       setIsLoading(false);
     }
   };
-
+  const superAdmin = user.role === "super_admin";
   useEffect(() => {
-    fetchUsers();
+    if (isAuthenticated && superAdmin) fetchUsers();
   }, []);
 
-  const handleRoleChange = async (id, newRole) => {};
+  const handleRoleChange = async (id, newRole) => {
+    try {
+      setUpdatingId(id);
+      const res = await api.patch(`/auth/users/${id}/role`, { role: newRole });
+      const updatedUser = res.data.data;
+      setUsers((prev) =>
+        prev.map((u) => (u.id === id ? { ...u, role: updatedUser.role } : u)),
+      );
+    } catch (err) {
+      console.error("[handleRoleChange] Error:", err);
+      setError("Failed to update role");
+    } finally {
+      setUpdatingId(null);
+      fetchUsers();
+    }
+  };
 
-  const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString();
+  const handleSoftDelete = async (id) => {
+    try {
+      setUpdatingId(id);
+      await api.delete(`/auth/users/${id}`);
+      setUsers((prev) =>
+        prev.map((u) => (u.id === id ? { ...u, isDeleted: true } : u)),
+      );
+    } catch (err) {
+      console.error("[handleSoftDelete] Error:", err);
+      setError("Failed to ban user");
+    } finally {
+      setUpdatingId(null);
+      fetchUsers();
+    }
+  };
+
+  const handleRestore = async (id) => {
+    try {
+      setUpdatingId(id);
+      await api.patch(`/auth/users/${id}/restore`);
+      setUsers((prev) =>
+        prev.map((u) => (u.id === id ? { ...u, isDeleted: false } : u)),
+      );
+    } catch (err) {
+      console.error("[handleRestore] Error:", err);
+      setError("Failed to restore user");
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handleHardDelete = async (id) => {
+    try {
+      setUpdatingId(id);
+      await api.delete(`/auth/users/${id}/hard`);
+      setUsers((prev) => prev.filter((u) => u.id !== id));
+    } catch (err) {
+      console.error("[handleHardDelete] Error:", err);
+      setError("Failed to permanently delete user");
+    } finally {
+      setUpdatingId(null);
+      fetchUsers();
+      setOpenDeleteModal(false);
+    }
   };
 
   if (isLoading) {
@@ -43,7 +107,7 @@ const UserListTable = () => {
   }
 
   return (
-    <div className="max-w-full mx-auto">
+    <div className="max-w-full mx-5">
       <div className="relative flex flex-col w-full text-body-text bg-primary">
         <div className="relative mx-4 mt-4 overflow-hidden text-body-text bg-primary">
           <div className="flex items-center justify-between">
@@ -79,63 +143,100 @@ const UserListTable = () => {
                   </p>
                 </th>
                 <th className="p-4 cursor-pointer border-y border-border bg-secondary hover:bg-secondary/50">
-                  <p className="flex items-center justify-between gap-2 text-sm text-muted-text"></p>
+                  <p className="flex items-center justify-center gap-2 text-sm text-muted-text">
+                    Actions
+                  </p>
                 </th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
-                <tr key={user._id}>
+              {users.map((u) => (
+                <tr key={u.id}>
                   <td className="p-4 border-b border-border">
                     <div className="flex flex-col">
                       <p className="text-sm font-semibold text-body-text">
-                        {user.username}
+                        {u.username}
                       </p>
-                      <p className="text-sm text-muted-text">{user.email}</p>
+                      <p className="text-sm text-muted-text">{u.email}</p>
                     </div>
                   </td>
                   <td className="p-4 border-b border-border">
                     <p className="text-sm font-semibold text-body-text capitalize">
-                      {user.role.replace("_", " ")}
+                      {u.role.replace("_", " ")}
                     </p>
                   </td>
                   <td className="p-4 border-b border-border">
                     <div className="w-max">
                       <div
                         className={`relative grid items-center px-2 py-1 text-xs font-bold uppercase rounded-md ${
-                          user.isDeleted
+                          u.isDeleted
                             ? "text-red-900 bg-red-500/20"
                             : "text-green-900 bg-green-500/20"
                         }`}
                       >
-                        <span>{user.isDeleted ? "deleted" : "active"}</span>
+                        <span>{u.isDeleted ? "deleted" : "active"}</span>
                       </div>
                     </div>
                   </td>
                   <td className="p-4 border-b border-border">
                     <p className="text-sm text-muted-text">
-                      {formatDate(user.createdAt)}
+                      {formatDate(u.createdAt)}
                     </p>
                   </td>
-                  <td className="p-4 border-b border-border">
-                    {user.role === "super_admin" ? (
-                      <span className="text-xs text-muted-text">—</span>
-                    ) : user.role === "admin" ? (
-                      <button
-                        onClick={() => handleRoleChange(user._id, "user")}
-                        disabled={updatingId === user._id}
-                        className="btn-secondary btn-sm"
-                      >
-                        {updatingId === user._id ? "..." : "Remove Admin"}
-                      </button>
+                  <td className="flex flex-col  justify-center sm:flex-row sm:flex-wrap items-start sm:items-center gap-2 p-10 border-b border-border">
+                    {u.role === "super_admin" ? (
+                      <span className="text-md text-muted-text">
+                        Super Admin
+                      </span>
                     ) : (
-                      <button
-                        onClick={() => handleRoleChange(user._id, "admin")}
-                        disabled={updatingId === user._id}
-                        className="btn-primary btn-sm"
-                      >
-                        {updatingId === user._id ? "..." : "Make Admin"}
-                      </button>
+                      <>
+                        {u.role === "admin" ? (
+                          <button
+                            onClick={() => handleRoleChange(u.id, "user")}
+                            disabled={updatingId === u.id || u.isDeleted}
+                            className="btn-secondary btn-sm"
+                          >
+                            {updatingId === u.id ? "..." : "Remove Admin"}
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleRoleChange(u.id, "admin")}
+                            disabled={updatingId === u.id || u.isDeleted}
+                            className="btn-primary btn-sm"
+                          >
+                            {updatingId === u.id ? "..." : "Make Admin"}
+                          </button>
+                        )}
+
+                        {u.isDeleted ? (
+                          <button
+                            onClick={() => handleRestore(u.id)}
+                            disabled={updatingId === u.id}
+                            className="btn-success btn-sm"
+                          >
+                            {updatingId === u.id ? "..." : "Restore User"}
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleSoftDelete(u.id)}
+                            disabled={updatingId === u.id}
+                            className="btn-warning btn-sm"
+                          >
+                            {updatingId === u.id ? "..." : "Ban User"}
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            setDeleteId(u.id);
+                            setOpenDeleteModal(true);
+                          }}
+                          disabled={updatingId === u.id}
+                          className="btn-danger btn-sm"
+                        >
+                          {updatingId === u.id ? "..." : "Delete User"}
+                        </button>
+                      </>
                     )}
                   </td>
                 </tr>
@@ -144,6 +245,13 @@ const UserListTable = () => {
           </table>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+        loading={isLoading}
+        handleConfirmDelete={() => handleHardDelete(deleteId)}
+        text="user"
+      />
     </div>
   );
 };

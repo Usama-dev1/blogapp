@@ -3,6 +3,7 @@ const ConfirmationModal = ({
   onClose,
   handleConfirmDelete,
   loading,
+  text = "post",
 }) => {
   if (!isOpen) return null;
 
@@ -15,7 +16,7 @@ const ConfirmationModal = ({
         className="w-full max-w-xl bg-primary rounded-lg shadow-lg p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <p>Are you sure you want to delete this post?</p>
+        <p>{`Are you sure you want to delete this ${text}?`}</p>
         <div className="flex justify-end gap-2 mt-4">
           <button
             className="btn-secondary btn-md"

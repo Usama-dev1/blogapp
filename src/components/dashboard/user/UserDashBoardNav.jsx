@@ -6,6 +6,8 @@ import { CiHome } from "react-icons/ci";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { MdOutlineDrafts } from "react-icons/md";
 import { FaList } from "react-icons/fa6";
+import { FaListAlt } from "react-icons/fa";
+
 import { AiTwotoneDashboard } from "react-icons/ai";
 
 import { FaUsers } from "react-icons/fa6";
@@ -58,20 +60,27 @@ const UserDashBoardNav = () => {
     },
   ];
 
-  // if (admin) {
-  //   links.push({
-  //     name: "Manage Users",
-  //     icon: <FaList />,
-  //     path: "/dashboard/admin/manage-users",
-  //   });
-  // }
+  if (admin) {
+    links.push({
+      name: "All User Posts",
+      icon: <FaListAlt />,
+      path: "/dashboard/user/user-posts",
+    });
+  }
 
   if (superAdmin) {
-    links.push({
-      name: "Manage Users",
-      icon: <FaUsers />,
-      path: "/dashboard/admin/users",
-    });
+    links.push(
+      {
+        name: "All User Posts",
+        icon: <FaListAlt />,
+        path: "/dashboard/user/user-posts",
+      },
+      {
+        name: "Manage Users",
+        icon: <FaUsers />,
+        path: "/dashboard/admin/users",
+      },
+    );
   }
 
   return (

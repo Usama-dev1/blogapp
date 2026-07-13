@@ -97,6 +97,21 @@
   .btn-icon.active {
     @apply text-brand;
   }
+  .btn-warning {
+    @apply font-ui font-semibold cursor-pointer transition-colors duration-150 bg-state-highlight text-body-text hover:brightness-90;
+  }
+
+  .btn-warning:disabled {
+    @apply bg-muted-text text-white opacity-40 cursor-not-allowed;
+  }
+
+  .btn-success {
+    @apply font-ui font-semibold cursor-pointer transition-colors duration-150 bg-link text-white hover:bg-link-hover;
+  }
+
+  .btn-success:disabled {
+    @apply bg-muted-text text-white opacity-40 cursor-not-allowed;
+  }
 
   .btn-sm {
     @apply px-3 py-1.5 text-[13px] rounded-full;

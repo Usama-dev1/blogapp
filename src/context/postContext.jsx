@@ -82,10 +82,12 @@ export const PostProvider = ({ children }) => {
       dispatch({ type: SET_LOADING, payload: false });
     }
   };
-  const getPosts = async () => {
+  const getPosts = async (page = 1, limit = 10, myPosts = false) => {
     dispatch({ type: SET_LOADING, payload: true });
     try {
-      const response = await api.get(`/post`);
+      const response = await api.get(`/post`, {
+        params: { page, limit, myPosts },
+      });
       const { data, success, message } = response.data;
       if (success && data?.posts) {
         dispatch({

@@ -11,6 +11,7 @@ import LoginForm from "./components/auth/loginForm";
 import RegisterForm from "./components/auth/registerForm";
 import HomePage from "./pages/HomePage2";
 import UserDashboardAnalytics from "./components/dashboard/user/UserDashboardAnalytics";
+import UserDashboardAllPosts from "./components/super-admin/UserDashboardAllPosts";
 const App = () => {
   return (
     <BrowserRouter>
@@ -49,6 +50,10 @@ const App = () => {
                 <ProtectedRoute allowedRoles={["admin", "super_admin"]} />
               }
             >
+              <Route
+                path="/dashboard/user/user-posts"
+                element={<UserDashboardAllPosts />}
+              />
               <Route
                 path="/dashboard/admin/users"
                 element={<UserListTable />}

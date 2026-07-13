@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { useAuth } from "../../../hooks/useAuth";
-import { usePostHook } from "../../../hooks/usePostHook";
-import ConfirmationModal from "../../common/ConfirmationModal";
-import ViewPostModal from "../../common/ViewPostModal";
-import EditPostModal from "../../common/EditPostModal";
-import Pagination from "../../common/Pagination";
+import { useAuth } from "../../hooks/useAuth";
+import { usePostHook } from "../../hooks/usePostHook";
+import ConfirmationModal from "../../components/common/ConfirmationModal";
+import ViewPostModal from "../../components/common/ViewPostModal";
+import EditPostModal from "../../components/common/EditPostModal";
+import Pagination from "../../components/common/Pagination";
 
-const UserDashboardPosts = () => {
+const UserDashboardAllPosts = () => {
   const {
     state: { user },
   } = useAuth();
@@ -23,11 +23,11 @@ const UserDashboardPosts = () => {
   const [openEditModal, setOpenEditModal] = useState(false);
 
   useEffect(() => {
-    if (user?.id) getPosts(1, pagination.limit, true);
+    if (user?.id) getPosts(1, pagination.limit);
   }, [user?.id]);
 
   const handlePageChange = (newPage) => {
-    getPosts(newPage, pagination.limit, true);
+    getPosts(newPage, pagination.limit);
   };
 
   const handleDeletePost = async () => {
@@ -57,7 +57,7 @@ const UserDashboardPosts = () => {
           <div className="flex items-center justify-between ">
             <div className="w-full">
               <h3 className="text-2xl text-center font-semibold text-body-text">
-                Post List
+                All User Posts
               </h3>
             </div>
           </div>
@@ -86,10 +86,13 @@ const UserDashboardPosts = () => {
                 <tr key={p._id}>
                   <td className="p-4 w-20 border-b border-border">
                     <div className="flex  items-center justify-center gap-3">
-                      <Link onClick={() => setOpenViewModal(true)}>
-                        <span onClick={() => setOpenViewModal(true)}>
-                          {p.title.slice(0, 50)}
-                        </span>
+                      <Link
+                        onClick={() => {
+                          setOpenViewModal(true);
+                          handleViewPost(p._id);
+                        }}
+                      >
+                        <span>{p.title.slice(0, 50)}</span>
                       </Link>
                     </div>
                   </td>
@@ -172,4 +175,4 @@ const UserDashboardPosts = () => {
   );
 };
 
-export default UserDashboardPosts;
+export default UserDashboardAllPosts;

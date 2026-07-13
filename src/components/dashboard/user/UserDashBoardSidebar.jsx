@@ -4,6 +4,8 @@ import { MdOutlinePostAdd } from "react-icons/md";
 import { MdOutlineDrafts } from "react-icons/md";
 import { FaUsers } from "react-icons/fa6";
 import { AiTwotoneDashboard } from "react-icons/ai";
+import { FaListAlt } from "react-icons/fa";
+
 import { FaList } from "react-icons/fa6";
 import { useAuth } from "../../../hooks/useAuth";
 const UserDashBoardSidebar = () => {
@@ -39,20 +41,27 @@ const UserDashBoardSidebar = () => {
     { name: "My posts", icon: <FaList />, path: "/dashboard/user/all-posts" },
   ];
 
-  // if (admin) {
-  //   links.push({
-  //     name: "Admin Panel",
-  //     icon: <FaList />,
-  //     path: "/dashboard/admin/panel",
-  //   });
-  // }
+  if (admin) {
+    links.push({
+      name: "All User Posts",
+      icon: <FaListAlt />,
+      path: "/dashboard/user/user-posts",
+    });
+  }
 
   if (superAdmin) {
-    links.push({
-      name: "Manage Users",
-      icon: <FaUsers />,
-      path: "/dashboard/admin/users",
-    });
+    links.push(
+      {
+        name: "All User Posts",
+        icon: <FaListAlt />,
+        path: "/dashboard/user/user-posts",
+      },
+      {
+        name: "Manage Users",
+        icon: <FaUsers />,
+        path: "/dashboard/admin/users",
+      },
+    );
   }
 
   return (
