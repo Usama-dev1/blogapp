@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ImSpinner3 } from "react-icons/im";
 import { useCategoryHook } from "../../../hooks/useCategoryHook";
 import { usePostHook } from "../../../hooks/usePostHook";
 

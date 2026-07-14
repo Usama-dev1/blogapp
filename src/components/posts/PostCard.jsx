@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-
+import { getRandomImage } from "../../util/generateImage";
 const PostCard = ({ post }) => {
   const { title, content, createdAt } = post;
 
@@ -11,7 +11,11 @@ const PostCard = ({ post }) => {
         <NavLink to={`/post/${post._id}`} className="hover:cursor-pointer ">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
             <div className="w-full sm:w-32 h-40 sm:h-32 bg-fuchsia-300 rounded-xl shrink-0 flex items-center justify-center">
-              Image
+              <img
+                src={getRandomImage()}
+                alt={title}
+                className="w-full h-full object-cover rounded-xl"
+              />
             </div>
 
             <div className="flex flex-col w-full">

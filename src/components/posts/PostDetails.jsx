@@ -63,7 +63,7 @@ const PostDetails = () => {
           </button>
         </Link>
       </div>
-      <h1 className="heading-main p-4">{title}</h1>
+      <h1 className="heading-main p-4">{title.slice(0, 80)}</h1>
 
       <p className="prose-text p-4 font-article whitespace-pre-line">
         {content}
