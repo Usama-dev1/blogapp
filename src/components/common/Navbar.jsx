@@ -19,11 +19,13 @@ const Navbar = () => {
     <nav className="relative bg-primary border-b border-border">
       <div className="body-width flex items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
         <NavLink to="/">
-          <div className="text-2xl font-bold text-brand">BlogApp</div>
+          <div className="text-base sm:text-4xl py-2 font-bold text-brand">
+            BlogApp
+          </div>
         </NavLink>
 
         {/* Desktop links */}
-        <div className="flex items-center space-x-8">
+        <div className="hidden md:flex  items-center space-x-8">
           {loggedIn ? (
             <>
               <NavLink to="/dashboard/user">
@@ -69,7 +71,7 @@ const Navbar = () => {
       {/* Mobile menu */}
       {isOpen && (
         <div
-          className={`md:hidden absolute inset-0 top-10 z-50 w-full min-h-screen flex flex-col text-center gap-4 px-4 pb-6 bg-secondary transition py-4 duration-150 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+          className={`md:hidden absolute inset-0 top-15 z-50 w-full min-h-screen flex flex-col text-center gap-4 px-4 pb-6 bg-secondary transition py-4 duration-150 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
         >
           <a href="/" className="text-body">
             Home
@@ -77,19 +79,23 @@ const Navbar = () => {
 
           {loggedIn ? (
             <NavLink to="/dashboard/user">
-              <button className="btn-primary btn-sm w-full px-8">
-                Dashboard
-              </button>
+              <button className="btn-primary btn-sm px-8">Dashboard</button>
             </NavLink>
           ) : (
             <>
               <NavLink to="/register">
-                <button className="btn-primary btn-sm w-full px-8">
+                <button
+                  className="btn-primary btn-sm w-full px-8"
+                  onClick={() => setIsOpen(false)}
+                >
                   Register
                 </button>
               </NavLink>
               <NavLink to="/login">
-                <button className="btn-secondary btn-sm w-full px-8">
+                <button
+                  className="btn-secondary btn-sm w-full px-8"
+                  onClick={() => setIsOpen(false)}
+                >
                   Login
                 </button>
               </NavLink>
