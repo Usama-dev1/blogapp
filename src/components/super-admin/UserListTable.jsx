@@ -3,6 +3,7 @@ import ConfirmationModal from "../common/ConfirmationModal";
 import { api } from "../../services/interceptors";
 import { useAuth } from "../../hooks/useAuth";
 import { formatDate } from "../../util/formatDate";
+import Pagination from "../common/Pagination";
 
 const UserListTable = () => {
   const [users, setUsers] = useState([]);
@@ -10,21 +11,39 @@ const UserListTable = () => {
   const [error, setError] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(1);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const { state: authState } = useAuth();
   const { user, isAuthenticated } = authState;
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (page = 1, limit = 10) => {
     try {
       setIsLoading(true);
-      const res = await api.get("/auth/users");
+      setError(null);
+
+      const res = await api.get("/auth/users", {
+        params: {
+          page,
+          limit,
+        },
+      });
+
       setUsers(res.data.data);
+      setCurrentPage(res.data.pagination.currentPage);
+      setTotalPages(res.data.pagination.totalPages);
+      setTotalUsers(res.data.pagination.totalUsers);
     } catch (err) {
       console.error("[fetchUsers] Error:", err);
       setError("Failed to load users");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handlePageChange = (newPage) => {
+    fetchUsers(newPage, 10);
   };
   const superAdmin = user.role === "super_admin";
   useEffect(() => {
@@ -113,7 +132,7 @@ const UserListTable = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-body-text">
-                Users :{users.length}
+                Users :{totalUsers}
               </h3>
             </div>
           </div>
@@ -194,7 +213,7 @@ const UserListTable = () => {
                           <button
                             onClick={() => handleRoleChange(u.id, "user")}
                             disabled={updatingId === u.id || u.isDeleted}
-                            className="btn-secondary btn-sm"
+                            className="btn-secondary btn-sm text-xs"
                           >
                             {updatingId === u.id ? "..." : "Remove Admin"}
                           </button>
@@ -202,7 +221,7 @@ const UserListTable = () => {
                           <button
                             onClick={() => handleRoleChange(u.id, "admin")}
                             disabled={updatingId === u.id || u.isDeleted}
-                            className="btn-primary btn-sm"
+                            className="btn-primary btn-sm text-xs"
                           >
                             {updatingId === u.id ? "..." : "Make Admin"}
                           </button>
@@ -212,7 +231,7 @@ const UserListTable = () => {
                           <button
                             onClick={() => handleRestore(u.id)}
                             disabled={updatingId === u.id}
-                            className="btn-success btn-sm"
+                            className="btn-success btn-sm text-xs"
                           >
                             {updatingId === u.id ? "..." : "Restore User"}
                           </button>
@@ -220,7 +239,7 @@ const UserListTable = () => {
                           <button
                             onClick={() => handleSoftDelete(u.id)}
                             disabled={updatingId === u.id}
-                            className="btn-warning btn-sm"
+                            className="btn-warning btn-sm text-xs"
                           >
                             {updatingId === u.id ? "..." : "Ban User"}
                           </button>
@@ -245,6 +264,13 @@ const UserListTable = () => {
           </table>
         </div>
       </div>
+      <Pagination
+        page={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        disabled={isLoading}
+      />
+
       <ConfirmationModal
         isOpen={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}

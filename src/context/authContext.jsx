@@ -48,7 +48,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const getProfile = async () => {
       const token = getStoredToken();
-      console.log("Token found:", token);
       if (!token) {
         dispatch({ type: LOGOUT });
         return;
@@ -125,7 +124,6 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: SET_LOADING, payload: true });
     try {
       const response = await api.post(`/auth/logout`);
-      console.log(response.data);
       const { success, message } = response.data;
 
       if (success) {

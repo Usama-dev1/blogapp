@@ -11,6 +11,12 @@ export const initialState = {
     limit: 10,
     currentPage: 1,
   },
+  draftPagination: {
+    totalPages: null,
+    totalPosts: null,
+    limit: 10,
+    currentPage: 1,
+  },
   error: null,
   isLoading: false,
 };
@@ -107,9 +113,9 @@ export default function postReducer(state = initialState, action) {
       return {
         ...state,
         draftPosts: action.payload?.draftPosts ?? [],
-        pagination: {
-          ...state.pagination,
-          ...(action.payload?.pagination ?? {}),
+        draftPagination: {
+          ...state.draftPagination,
+          ...(action.payload?.draftPagination ?? {}),
         },
         error: null,
         isLoading: false,

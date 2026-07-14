@@ -41,17 +41,23 @@ const UserDashboardAnalytics = () => {
     { label: "Likes", value: stats?.totalLikes ?? 0 },
   ];
 
-  const statRows = stats
+  const statRows = stats.platform
     ? [
-        { label: "Published Posts", value: stats.platform.totalPublishedPosts },
-        { label: "Draft Posts", value: stats.platform.totalDraftPosts },
-        { label: "Deleted Posts", value: stats.platform.totalDeletedPosts },
+        {
+          label: "Published Posts",
+          value: stats.platform?.totalPublishedPosts ?? 0,
+        },
+        { label: "Draft Posts", value: stats.platform?.totalDraftPosts ?? 0 },
+        {
+          label: "Deleted Posts",
+          value: stats.platform?.totalDeletedPosts ?? 0,
+        },
         {
           label: "All Posts",
-          value: stats.platform.totalPostsIncludingDeleted,
+          value: stats.platform?.totalPostsIncludingDeleted ?? 0,
         },
-        { label: "Total Comments", value: stats.platform.totalComments },
-        { label: "Total Likes", value: stats.platform.totalLikes },
+        { label: "Total Comments", value: stats?.platform.totalComments ?? 0 },
+        { label: "Total Likes", value: stats?.platform.totalLikes ?? 0 },
       ]
     : [];
 

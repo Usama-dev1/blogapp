@@ -9,13 +9,6 @@ export const initialState = {
 
 export default function categoryReducer(state = initialState, action) {
   switch (action.type) {
-    case categoryActionTypes.CREATE_CATEGORY:
-      return {
-        ...state,
-        category: [action.payload, ...state.category],
-        error: null,
-        isLoading: false,
-      };
     case categoryActionTypes.GET_CATEGORY_SUCCESS:
       return {
         ...state,
@@ -23,13 +16,21 @@ export default function categoryReducer(state = initialState, action) {
         error: null,
         isLoading: false,
       };
+    case categoryActionTypes.CREATE_CATEGORY:
+      return {
+        ...state,
+        category: [action.payload.currentCategory, ...state.category],
+        currentCategory: action.payload.currentCategory,
+        error: null,
+        isLoading: false,
+      };
     case categoryActionTypes.UPDATE_CATEGORY:
       return {
         ...state,
-        category: state.category.map((comm) =>
-          action.payload.currentCategory._id === comm._id
+        category: state.category.map((c) =>
+          action.payload.currentCategory._id === c._id
             ? action.payload.currentCategory
-            : comm,
+            : c,
         ),
         currentCategory: action.payload.currentCategory,
         error: null,
@@ -39,7 +40,7 @@ export default function categoryReducer(state = initialState, action) {
       return {
         ...state,
         category: state.category.filter(
-          (comm) => comm._id !== action.payload?.categoryId,
+          (c) => c._id !== action.payload?.categoryId,
         ),
         currentCategory:
           state.currentCategory?._id === action.payload?.categoryId

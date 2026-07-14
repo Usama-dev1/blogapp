@@ -164,7 +164,10 @@ export const PostProvider = ({ children }) => {
       if (success && data?.posts) {
         dispatch({
           type: GET_DRAFT_POSTS,
-          payload: { draftPosts: data?.posts, pagination: data?.pagination },
+          payload: {
+            draftPosts: data?.posts,
+            draftPagination: data?.pagination,
+          },
         });
       } else {
         dispatch({

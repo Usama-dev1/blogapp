@@ -12,6 +12,7 @@ import RegisterForm from "./components/auth/registerForm";
 import HomePage from "./pages/HomePage2";
 import UserDashboardAnalytics from "./components/dashboard/user/UserDashboardAnalytics";
 import UserDashboardAllPosts from "./components/super-admin/UserDashboardAllPosts";
+import UserDashboardCatForm from "./components/super-admin/UserDashboardCatForm";
 const App = () => {
   return (
     <BrowserRouter>
@@ -50,6 +51,10 @@ const App = () => {
                 <ProtectedRoute allowedRoles={["admin", "super_admin"]} />
               }
             >
+              <Route
+                path="/dashboard/user/create-category"
+                element={<UserDashboardCatForm />}
+              />
               <Route
                 path="/dashboard/user/user-posts"
                 element={<UserDashboardAllPosts />}

@@ -144,7 +144,7 @@ const UserDashboardAllPosts = () => {
                     </td>
 
                     <td className="p-4 w-20 border-b border-border">
-                      <div className="flex flex-col sm:flex-row items-center justify-center  w-full gap-2">
+                      <div className="flex flex-col sm:flex-row items-center justify-center py-4 px-4 w-full gap-2">
                         <button
                           className=" btn-icon btn-sm"
                           type="button"
@@ -173,9 +173,9 @@ const UserDashboardAllPosts = () => {
                           <button
                             onClick={() => handleRestorePost(p._id)}
                             disabled={pId === p._id}
-                            className="btn-success btn-sm"
+                            className="btn-success btn-sm "
                           >
-                            {pId === p._id ? "..." : "Restore Post"}
+                            {pId === p._id ? "..." : "Publish"}
                           </button>
                         ) : (
                           <button
@@ -183,7 +183,7 @@ const UserDashboardAllPosts = () => {
                             disabled={pId === p._id}
                             className="btn-warning btn-sm"
                           >
-                            {pId === p._id ? "..." : "Remove Post"}
+                            {pId === p._id ? "..." : "Unpublish"}
                           </button>
                         )}
                         {(user.role === "admin" ||

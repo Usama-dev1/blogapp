@@ -1,24 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { usePostHook } from "../../../hooks/usePostHook";
 import ConfirmationModal from "../../common/ConfirmationModal";
 import ViewPostModal from "../../common/ViewPostModal";
 import EditDraftModal from "../../common/EditDraftModal";
+import Pagination from "../../common/Pagination";
+import { useAuth } from "../../../hooks/useAuth";
 const UserDashboardDrafts = () => {
   const {
-    state: { isLoading, currentDraftPost, draftPosts },
+    state: { isLoading, currentDraftPost, draftPosts, draftPagination },
     deleteDraftPost,
+    getDraftPosts,
     getDraftPostById,
   } = usePostHook();
+  const { user } = useAuth();
 
   const [pId, setPId] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const allDraftPosts = draftPosts ?? [];
-
-  if (allDraftPosts.length === 0) return <div>No user posts</div>;
-
+  useEffect(() => {
+    if (user?.id) getDraftPosts(1, draftPagination.limit);
+  }, [user?.id]);
+  // if (allDraftPosts.length === 0) return <div>No user posts</div>;
+  const handlePageChange = (newPage) => {
+    getDraftPosts(newPage, draftPagination.limit);
+  };
   const handleDeleteDraft = async () => {
     try {
       await deleteDraftPost(pId);
@@ -39,7 +47,7 @@ const UserDashboardDrafts = () => {
   };
 
   return (
-    <div className="mx-auto flex justify-center items-center w-full px-5">
+    <div className="mx-auto flex flex-col justify-center items-center w-full px-5">
       <div className="relative flex flex-col text-center w-full text-body-text bg-primary">
         <div className="relative mx-4 mt-4 overflow-hidden text-body-text bg-primary">
           <div className="flex items-center justify-between ">
@@ -74,10 +82,14 @@ const UserDashboardDrafts = () => {
                 <tr key={p._id}>
                   <td className="p-4 w-20 border-b border-border">
                     <div className="flex  items-center justify-center gap-3">
-                      <Link onClick={() => setOpenViewModal(true)}>
-                        <span className="" onClick={() => openViewModal(true)}>
-                          {p.title.slice(0, 50)}
-                        </span>
+                      <Link
+                        onClick={() => {
+                          setOpenViewModal(true);
+                          setPId(p._id);
+                          handleViewPost(p._id);
+                        }}
+                      >
+                        <span>{p.title.slice(0, 50)}</span>
                       </Link>
                     </div>
                   </td>
@@ -96,6 +108,7 @@ const UserDashboardDrafts = () => {
                         type="button"
                         onClick={() => {
                           setOpenViewModal(true);
+                          setPId(p._id);
                           handleViewPost(p._id);
                         }}
                       >
@@ -128,29 +141,19 @@ const UserDashboardDrafts = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex items-center justify-around p-3">
-          <p className="block text-sm text-slate-500">Page 1 of 10</p>
-          <div className="flex gap-1">
-            <button
-              className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-            >
-              Previous
-            </button>
-            <button
-              className="rounded border border-slate-300 py-2.5 px-3 text-center text-xs font-semibold text-slate-600 transition-all hover:opacity-75 focus:ring focus:ring-slate-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-            >
-              Next
-            </button>
-          </div>
-        </div>
       </div>
+      <Pagination
+        page={draftPagination.currentPage}
+        totalPages={draftPagination.totalPages}
+        onPageChange={handlePageChange}
+        disabled={isLoading}
+      />
       <ConfirmationModal
         isOpen={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
         loading={isLoading}
         handleConfirmDelete={handleDeleteDraft}
+        text="draft"
       />
       <ViewPostModal
         isOpen={openViewModal}
@@ -163,6 +166,7 @@ const UserDashboardDrafts = () => {
         isOpen={openEditModal}
         loading={isLoading}
         post={currentDraftPost}
+        postId={pId}
         onClose={() => setOpenEditModal(false)}
       />
     </div>

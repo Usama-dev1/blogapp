@@ -71,6 +71,11 @@ const UserDashBoardNav = () => {
   if (superAdmin) {
     links.push(
       {
+        name: "Create Category",
+        icon: <FaListAlt />,
+        path: "/dashboard/user/create-category",
+      },
+      {
         name: "All User Posts",
         icon: <FaListAlt />,
         path: "/dashboard/user/user-posts",
