@@ -1,9 +1,12 @@
 import { FaWindowClose } from "react-icons/fa";
 import { ImSpinner3 } from "react-icons/im";
 
-const ViewPostModal = ({ isOpen, onClose, loading, post }) => {
-  if (!isOpen || !post) return null;
-  if (loading)
+const ViewPostModal = ({ isOpen, onClose, loading, post, postId }) => {
+  if (!isOpen) return null;
+
+  const isStale = !post || post._id !== postId;
+
+  if (loading || isStale)
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
         <ImSpinner3 className="animate-spin text-7xl" />

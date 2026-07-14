@@ -6,8 +6,8 @@ import { usePostHook } from "../../hooks/usePostHook";
 
 const EditPostModal = ({ isOpen, onClose, loading, post }) => {
   //set content check length for validation
-  const TITLE_MIN = 80;
-  const CONTENT_MIN = 150;
+  const TITLE_MIN = 10;
+  const CONTENT_MIN = 20;
 
   const {
     state: { category },

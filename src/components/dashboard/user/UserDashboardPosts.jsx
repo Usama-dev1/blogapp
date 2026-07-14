@@ -86,10 +86,14 @@ const UserDashboardPosts = () => {
                 <tr key={p._id}>
                   <td className="p-4 w-20 border-b border-border">
                     <div className="flex  items-center justify-center gap-3">
-                      <Link onClick={() => setOpenViewModal(true)}>
-                        <span onClick={() => setOpenViewModal(true)}>
-                          {p.title.slice(0, 50)}
-                        </span>
+                      <Link
+                        onClick={() => {
+                          setPId(p._id);
+                          handleViewPost(p._id);
+                          setOpenViewModal(true);
+                        }}
+                      >
+                        <span>{p.title.slice(0, 50)}</span>
                       </Link>
                     </div>
                   </td>
@@ -108,6 +112,7 @@ const UserDashboardPosts = () => {
                         type="button"
                         onClick={() => {
                           setOpenViewModal(true);
+                          setPId(p._id);
                           handleViewPost(p._id);
                         }}
                       >
@@ -118,11 +123,13 @@ const UserDashboardPosts = () => {
                         type="button"
                         onClick={() => {
                           setOpenEditModal(true);
+                          setPId(p._id);
                           handleViewPost(p._id);
                         }}
                       >
                         Edit
                       </button>
+
                       <button
                         className="btn-danger btn-sm"
                         type="button"
@@ -161,6 +168,7 @@ const UserDashboardPosts = () => {
         onClose={() => setOpenViewModal(false)}
         loading={isLoading}
         post={currentPost}
+        postId={pId}
       />
       <EditPostModal
         isOpen={openEditModal}

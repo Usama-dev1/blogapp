@@ -14,29 +14,49 @@ const UserDashboardAllPosts = () => {
   const {
     state: { posts, isLoading, currentPost, pagination },
     deletePost,
+    restorePost,
     getPostById,
-    getPosts,
+    getAllPostsAdmin,
   } = usePostHook();
   const [pId, setPId] = useState(null);
+  const [veiwpId, setViewPId] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
 
-  useEffect(() => {
-    if (user?.id) getPosts(1, pagination.limit);
-  }, [user?.id]);
-
   const handlePageChange = (newPage) => {
-    getPosts(newPage, pagination.limit);
+    getAllPostsAdmin(newPage, pagination.limit);
   };
 
-  const handleDeletePost = async () => {
+  const handleHardDeletePost = async () => {
     try {
       await deletePost(pId);
     } catch (error) {
       console.log(error);
     } finally {
       setOpenDeleteModal(false);
+    }
+  };
+
+  const handleSoftDeletePost = async (id) => {
+    try {
+      setPId(id);
+      await deletePost(id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPId(null);
+    }
+  };
+
+  const handleRestorePost = async (id) => {
+    try {
+      setPId(id);
+      await restorePost(id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPId(null);
     }
   };
 
@@ -47,8 +67,9 @@ const UserDashboardAllPosts = () => {
       console.log(error);
     }
   };
-
-  if (posts.length === 0) return <div>No user posts</div>;
+  useEffect(() => {
+    if (user?.id) getAllPostsAdmin(1, pagination.limit);
+  }, [user?.id]);
 
   return (
     <div className="mx-auto flex flex-col justify-center items-center w-full px-5">
@@ -62,87 +83,130 @@ const UserDashboardAllPosts = () => {
             </div>
           </div>
         </div>
-        <div className="p-0 overflow-scroll text-center">
-          <table className="w-full mt-4 table-auto min-w-max text-center">
-            <thead>
-              <tr>
-                <th className="p-4 w-20 text-center bg-secondary">
-                  <p className="flex items-center justify-center gap-2">Post</p>
-                </th>
-                <th className="p-4 w-20 text-center bg-secondary">
-                  <p className="flex items-center justify-center gap-2">
-                    Status
-                  </p>
-                </th>
-                <th className="p-4 w-20 text-center bg-secondary">
-                  <p className="flex items-center justify-center gap-2">
-                    Action
-                  </p>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {posts.map((p) => (
-                <tr key={p._id}>
-                  <td className="p-4 w-20 border-b border-border">
-                    <div className="flex  items-center justify-center gap-3">
-                      <Link
-                        onClick={() => {
-                          setOpenViewModal(true);
-                          handleViewPost(p._id);
-                        }}
-                      >
-                        <span>{p.title.slice(0, 50)}</span>
-                      </Link>
-                    </div>
-                  </td>
-                  <td className="p-4 w-20 border-b border-border">
-                    <div className="flex items-center justify-center gap-3 ">
-                      <span className="font-bold text-xs sm:text-base text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20">
-                        {p.draft ? "Draft" : "Published"}
-                      </span>
-                    </div>
-                  </td>
 
-                  <td className="p-4 w-20 border-b border-border">
-                    <div className="flex flex-col sm:flex-row items-center justify-center  w-full gap-2">
-                      <button
-                        className=" btn-icon btn-sm"
-                        type="button"
-                        onClick={() => {
-                          setOpenViewModal(true);
-                          handleViewPost(p._id);
-                        }}
-                      >
-                        View
-                      </button>
-                      <button
-                        className="btn-secondary btn-sm"
-                        type="button"
-                        onClick={() => {
-                          setOpenEditModal(true);
-                          handleViewPost(p._id);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn-danger btn-sm"
-                        type="button"
-                        onClick={() => {
-                          setOpenDeleteModal(true);
-                          setPId(p._id);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
+        {isLoading && posts.length === 0 ? (
+          <div className="p-8 text-muted-text">Loading posts...</div>
+        ) : posts.length === 0 ? (
+          <div className="p-8 text-muted-text">No posts found</div>
+        ) : (
+          <div className="p-0 overflow-scroll text-center">
+            <table className="w-full mt-4 table-auto min-w-max text-center">
+              <thead>
+                <tr>
+                  <th className="p-4 w-20 text-center bg-secondary">
+                    <p className="flex items-center justify-center gap-2">
+                      Post
+                    </p>
+                  </th>
+                  <th className="p-4 w-20 text-center bg-secondary">
+                    <p className="flex items-center justify-center gap-2">
+                      Status
+                    </p>
+                  </th>
+                  <th className="p-4 w-20 text-center bg-secondary">
+                    <p className="flex items-center justify-center gap-2">
+                      Action
+                    </p>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {posts.map((p) => (
+                  <tr key={p._id}>
+                    <td className="p-4 w-20 border-b border-border">
+                      <div className="flex  items-center justify-center gap-3">
+                        <Link
+                          onClick={() => {
+                            if (p.isDeleted) return;
+
+                            setOpenViewModal(true);
+                            setPId(p._id);
+                            handleViewPost(p._id);
+                          }}
+                          disabled={p.isDeleted}
+                        >
+                          <span>{p.title.slice(0, 50)}</span>
+                        </Link>
+                      </div>
+                    </td>
+                    <td className="p-4 w-20 border-b border-border">
+                      <div className="flex items-center justify-center gap-3">
+                        {p.isDeleted ? (
+                          <span className="font-bold text-xs sm:text-base text-red-900 uppercase rounded-md select-none whitespace-nowrap bg-red-500/20 px-2 py-1">
+                            Removed
+                          </span>
+                        ) : (
+                          <span className="font-bold text-xs sm:text-base text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20 px-2 py-1">
+                            {p.draft ? "Draft" : "Published"}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+
+                    <td className="p-4 w-20 border-b border-border">
+                      <div className="flex flex-col sm:flex-row items-center justify-center  w-full gap-2">
+                        <button
+                          className=" btn-icon btn-sm"
+                          type="button"
+                          disabled={p.isDeleted}
+                          onClick={() => {
+                            setOpenViewModal(true);
+                            setViewPId(p._id);
+                            handleViewPost(p._id);
+                          }}
+                        >
+                          View
+                        </button>
+                        <button
+                          className="btn-secondary btn-sm"
+                          type="button"
+                          disabled={p.isDeleted}
+                          onClick={() => {
+                            setOpenEditModal(true);
+                            handleViewPost(p._id);
+                          }}
+                        >
+                          Edit
+                        </button>
+
+                        {p.isDeleted ? (
+                          <button
+                            onClick={() => handleRestorePost(p._id)}
+                            disabled={pId === p._id}
+                            className="btn-success btn-sm"
+                          >
+                            {pId === p._id ? "..." : "Restore Post"}
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleSoftDeletePost(p._id)}
+                            disabled={pId === p._id}
+                            className="btn-warning btn-sm"
+                          >
+                            {pId === p._id ? "..." : "Remove Post"}
+                          </button>
+                        )}
+                        {(user.role === "admin" ||
+                          user.role === "super_admin") && (
+                          <button
+                            className="btn-danger btn-sm"
+                            type="button"
+                            onClick={() => {
+                              setOpenDeleteModal(true);
+                              setPId(p._id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
       <Pagination
         page={pagination.currentPage}
@@ -155,12 +219,12 @@ const UserDashboardAllPosts = () => {
         isOpen={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
         loading={isLoading}
-        handleConfirmDelete={handleDeletePost}
+        handleConfirmDelete={handleHardDeletePost}
         text="post"
       />
       <ViewPostModal
         isOpen={openViewModal}
-        postId={pId}
+        postId={veiwpId}
         onClose={() => setOpenViewModal(false)}
         loading={isLoading}
         post={currentPost}

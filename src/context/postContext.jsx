@@ -17,6 +17,7 @@ const {
   GET_DRAFT_POST,
   GET_DRAFT_POSTS,
   DELETE_DRAFT_POST,
+  RESTORE_POST,
   UPDATE_DRAFT_POST,
   PUBLISH_DRAFT_POST,
 } = postActionTypes;
@@ -152,10 +153,12 @@ export const PostProvider = ({ children }) => {
       dispatch({ type: SET_LOADING, payload: false });
     }
   };
-  const getDraftPosts = async () => {
+  const getDraftPosts = async (page = 1, limit = 10, allDrafts = false) => {
     dispatch({ type: SET_LOADING, payload: true });
     try {
-      const response = await api.get(`/post/drafts`);
+      const params = { page, limit };
+      if (allDrafts) params.allDrafts = true;
+      const response = await api.get(`/post/drafts`, { params });
       const { data, success, message } = response.data;
 
       if (success && data?.posts) {
@@ -248,7 +251,10 @@ export const PostProvider = ({ children }) => {
   const publishDraftPost = async (id, postData) => {
     dispatch({ type: SET_LOADING, payload: true });
     try {
-      const response = await api.put(`/post/${id}`, postData);
+      const response = await api.put(`/post/${id}`, {
+        ...postData,
+        draft: false,
+      });
       const { data, success, message } = response.data;
       if (success && data) {
         dispatch({
@@ -270,6 +276,54 @@ export const PostProvider = ({ children }) => {
       dispatch({ type: SET_LOADING, payload: false });
     }
   };
+  const getAllPostsAdmin = async (page = 1, limit = 10) => {
+    dispatch({ type: SET_LOADING, payload: true });
+    try {
+      const response = await api.get(`/post/admin/all`, {
+        params: { page, limit },
+      });
+      const { data, success, message } = response.data;
+      if (success && data?.posts) {
+        dispatch({
+          type: GET_POSTS_SUCCESS,
+          payload: { posts: data?.posts, pagination: data?.pagination },
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: message || "failed to fetch posts",
+        });
+      }
+    } catch (error) {
+      const msg = errorMessage(error, "failed to fetch posts");
+      dispatch({ type: SET_ERROR, payload: msg });
+      throw error;
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
+  };
+
+  const restorePost = async (id) => {
+    dispatch({ type: SET_LOADING, payload: true });
+    try {
+      const response = await api.patch(`/post/restore/${id}`);
+      const { data, success, message } = response.data;
+      if (success && data) {
+        dispatch({ type: RESTORE_POST, payload: { currentPost: data } });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: message || "failed to restore post",
+        });
+      }
+    } catch (error) {
+      const msg = errorMessage(error, "failed to restore post");
+      dispatch({ type: SET_ERROR, payload: msg });
+      throw error;
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
+  };
   useEffect(() => {
     getPosts();
     if (isAuthenticated) getDraftPosts();
@@ -279,6 +333,8 @@ export const PostProvider = ({ children }) => {
     () => ({
       state,
       dispatch,
+      getAllPostsAdmin,
+      restorePost,
       getPosts,
       createPost,
       getPostById,
