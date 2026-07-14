@@ -12,9 +12,6 @@ const Pagination = ({ page, totalPages, onPageChange, disabled = false }) => {
   return (
     <div className="flex w-full justify-between gap-8 space-x-8">
       <div className="w-full flex items-center justify-around p-3">
-        <p className="block text-sm text-link">
-          Page {page} of {totalPages}
-        </p>
         <div className="flex gap-3">
           <button
             onClick={handlePrev}
@@ -24,6 +21,9 @@ const Pagination = ({ page, totalPages, onPageChange, disabled = false }) => {
           >
             Previous
           </button>
+          <p className="block text-sm  mx-4 text-link">
+            Page {page} of {totalPages}
+          </p>
           <button
             onClick={handleNext}
             disabled={disabled || page === totalPages}

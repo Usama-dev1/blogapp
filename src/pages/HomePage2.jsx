@@ -20,7 +20,7 @@ const HomePage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="h-screen flex-col">
+    <div className="min-h-screen flex-col">
       {isLoading && posts.length === 0 ? (
         <div className="p-8 text-muted-text">Loading posts...</div>
       ) : (
