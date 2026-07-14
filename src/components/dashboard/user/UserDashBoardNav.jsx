@@ -7,9 +7,9 @@ import { MdOutlinePostAdd } from "react-icons/md";
 import { MdOutlineDrafts } from "react-icons/md";
 import { FaList } from "react-icons/fa6";
 import { FaListAlt } from "react-icons/fa";
-
+import { FaComments } from "react-icons/fa";
+import { IoMdLogOut } from "react-icons/io";
 import { AiTwotoneDashboard } from "react-icons/ai";
-
 import { FaUsers } from "react-icons/fa6";
 
 import { useAuth } from "./../../../hooks/useAuth";
@@ -61,15 +61,27 @@ const UserDashBoardNav = () => {
   ];
 
   if (admin) {
-    links.push({
-      name: "All User Posts",
-      icon: <FaListAlt />,
-      path: "/dashboard/user/user-posts",
-    });
+    links.push(
+      {
+        name: "All Comments",
+        icon: <FaComments />,
+        path: "/dashboard/user/comments",
+      },
+      {
+        name: "All User Posts",
+        icon: <FaListAlt />,
+        path: "/dashboard/user/user-posts",
+      },
+    );
   }
 
   if (superAdmin) {
     links.push(
+      {
+        name: "All Comments",
+        icon: <FaComments />,
+        path: "/dashboard/user/comments",
+      },
       {
         name: "Create Category",
         icon: <FaListAlt />,
@@ -93,11 +105,12 @@ const UserDashBoardNav = () => {
       <div className="text-2xl">
         <NavLink to="/">BlogApp</NavLink>
       </div>
-      <div>
+      <div className="space-x-3">
         <NavLink to="/dashboard/user">
-          <button className="btn-primary btn-md text-xs!">
-            Go to Dashboard
-          </button>
+          <button className="btn-primary btn-sm text-xs!">Dashboard</button>
+        </NavLink>
+        <NavLink to="/">
+          <button className="btn-secondary btn-sm text-xs!">home</button>
         </NavLink>
       </div>
       <button
@@ -146,9 +159,15 @@ const UserDashBoardNav = () => {
                 </NavLink>
               ))}
 
-              <div>
-                <button onClick={handleLogout} className="btn-danger btn-sm">
-                  Logout
+              <div className="flex w-full justify-center mt-8">
+                <button
+                  onClick={handleLogout}
+                  className="flex justify-center btn-danger btn-sm "
+                >
+                  <span className="me-2 flex justify-center items-center">
+                    <IoMdLogOut />
+                  </span>
+                  <p>Logout</p>
                 </button>
               </div>
             </div>

@@ -13,6 +13,7 @@ import HomePage from "./pages/HomePage2";
 import UserDashboardAnalytics from "./components/dashboard/user/UserDashboardAnalytics";
 import UserDashboardAllPosts from "./components/super-admin/UserDashboardAllPosts";
 import UserDashboardCatForm from "./components/super-admin/UserDashboardCatForm";
+import UserDashboardAllComments from "./components/super-admin/UserDashboardAllComments";
 const App = () => {
   return (
     <BrowserRouter>
@@ -54,6 +55,10 @@ const App = () => {
               <Route
                 path="/dashboard/user/create-category"
                 element={<UserDashboardCatForm />}
+              />
+              <Route
+                path="/dashboard/user/comments"
+                element={<UserDashboardAllComments />}
               />
               <Route
                 path="/dashboard/user/user-posts"

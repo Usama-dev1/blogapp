@@ -9,7 +9,7 @@ const UserDashBoardLayout = () => {
       </div>
       <div className="w-full h-screen mx-auto flex">
         {/* 2. Sidebar - Fixed width (e.g., 1/4 or 1/3) */}
-        <aside className="hidden sm:flex w-50 h-full bg-primary">
+        <aside className="hidden sm:flex w-60 h-full bg-primary">
           <UserDashBoardSidebar />
         </aside>
         {/* 3. Main Content Area - Grows to fill the remaining space */}

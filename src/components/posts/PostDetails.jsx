@@ -73,7 +73,7 @@ const PostDetails = () => {
           <button
             className="flex items-center gap-2 btn-sm btn-icon"
             onClick={handleLikeToggle}
-            disabled={likeState.isLoading}
+            disabled={likeState.isLoading || !isAuthenticated}
           >
             <span className="flex items-center  justify-center text-link">
               {userHasLiked ? (
@@ -83,7 +83,9 @@ const PostDetails = () => {
                 </>
               ) : (
                 <>
-                  <p className="text-muted-text  text-base">Like This Post</p>
+                  <p className="text-muted-text  text-base disabled:btn-">
+                    {isAuthenticated ? "Like This Post" : "Login to Like"}
+                  </p>
                   <AiOutlineLike className="text-2xl ms-2" />
                 </>
               )}

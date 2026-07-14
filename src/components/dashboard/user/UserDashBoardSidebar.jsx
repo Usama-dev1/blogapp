@@ -4,6 +4,10 @@ import { MdOutlinePostAdd } from "react-icons/md";
 import { MdOutlineDrafts } from "react-icons/md";
 import { FaUsers } from "react-icons/fa6";
 import { AiTwotoneDashboard } from "react-icons/ai";
+import { FaComments } from "react-icons/fa";
+import { TbCategoryPlus } from "react-icons/tb";
+import { IoMdLogOut } from "react-icons/io";
+
 import { FaListAlt } from "react-icons/fa";
 
 import { FaList } from "react-icons/fa6";
@@ -42,18 +46,31 @@ const UserDashBoardSidebar = () => {
   ];
 
   if (admin) {
-    links.push({
-      name: "All User Posts",
-      icon: <FaListAlt />,
-      path: "/dashboard/user/user-posts",
-    });
+    links.push(
+      {
+        name: "All Comments",
+        icon: <FaComments />,
+        path: "/dashboard/user/comments",
+      },
+
+      {
+        name: "All User Posts",
+        icon: <FaListAlt />,
+        path: "/dashboard/user/user-posts",
+      },
+    );
   }
 
   if (superAdmin) {
     links.push(
       {
+        name: "All Comments",
+        icon: <FaComments />,
+        path: "/dashboard/user/comments",
+      },
+      {
         name: "Create Category",
-        icon: <FaListAlt />,
+        icon: <TbCategoryPlus />,
         path: "/dashboard/user/create-category",
       },
       {
@@ -71,11 +88,11 @@ const UserDashBoardSidebar = () => {
   }
 
   return (
-    <aside className="w-full h-screen p-2 flex flex-col justify-between items-center border-r border-border font-ui">
-      <div className="flex flex-col items-center justify-between gap-4 py-12">
+    <aside className="w-full h-screen flex flex-col justify-between items-center border-r border-border font-ui">
+      <div className="flex flex-col items-center justify-between gap-4 ">
         <div className="text-xl py-4 font-bold">My Dashboard</div>
 
-        <nav className="w-full flex flex-col h-full items-start justify-start me-2">
+        <nav className="w-full flex flex-col h-full items-start justify-start">
           <NavLink
             to="/dashboard/user/create-post"
             className="btn-primary w-full text-center btn-md"
@@ -102,12 +119,17 @@ const UserDashBoardSidebar = () => {
             </NavLink>
           ))}
         </nav>
-      </div>
-
-      <div className="w-full text-center mb-4 px-2">
-        <button onClick={handleLogout} className="btn-danger btn-sm ">
-          Logout
-        </button>
+        <div className="w-full text-center flex justify-center px-2 py-4">
+          <button
+            onClick={handleLogout}
+            className="flex justify-center btn-danger btn-sm "
+          >
+            <span className="me-2 flex justify-center items-center">
+              <IoMdLogOut />
+            </span>
+            <p>Logout</p>
+          </button>
+        </div>
       </div>
     </aside>
   );

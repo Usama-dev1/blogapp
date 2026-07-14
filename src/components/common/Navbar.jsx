@@ -2,12 +2,19 @@ import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 import { useAuth } from "../../hooks/useAuth";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { IoMdLogOut } from "react-icons/io";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { state } = useAuth();
+  const { state, logout } = useAuth();
   const loggedIn = state.isAuthenticated;
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
   return (
     <nav className="relative bg-primary border-b border-border">
       <div className="body-width flex items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
@@ -16,13 +23,23 @@ const Navbar = () => {
         </NavLink>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="flex items-center space-x-8">
           {loggedIn ? (
-            <NavLink to="/dashboard/user">
-              <button className="btn-primary btn-md text-xs! ">
-                Go to Dashboard
-              </button>
-            </NavLink>
+            <>
+              <NavLink to="/dashboard/user">
+                <button className="btn-primary btn-sm md:btn-base text-xs! ">
+                  <p className="text-xs lg:text-base">Dashboard</p>
+                </button>
+              </NavLink>
+              <NavLink>
+                <button
+                  onClick={handleLogout}
+                  className="flex justify-center btn-danger btn-sm md:btn-base "
+                >
+                  <p className="text-xs lg:text-base">Logout</p>
+                </button>
+              </NavLink>
+            </>
           ) : (
             <>
               <NavLink to="/" className="text-lg hover:text-brand">
