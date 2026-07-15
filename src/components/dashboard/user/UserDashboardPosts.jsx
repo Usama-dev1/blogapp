@@ -48,7 +48,12 @@ const UserDashboardPosts = () => {
     }
   };
 
-  if (posts.length === 0) return <div>No user posts</div>;
+  if (posts.length === 0)
+    return (
+      <div className="w-full h-screen flex justify-center items-center text-2xl">
+        No user posts
+      </div>
+    );
 
   return (
     <div className="mx-auto flex flex-col justify-center items-center w-full px-5">

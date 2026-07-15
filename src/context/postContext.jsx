@@ -327,6 +327,28 @@ export const PostProvider = ({ children }) => {
       dispatch({ type: SET_LOADING, payload: false });
     }
   };
+
+  const deletePostHard = async (postId) => {
+    dispatch({ type: SET_LOADING, payload: true });
+    try {
+      const response = await api.delete(`/post/hard/${postId}`);
+      const { success, message } = response.data;
+      if (success) {
+        dispatch({ type: DELETE_POST, payload: { postId } });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: message || "failed to delete post",
+        });
+      }
+    } catch (error) {
+      const msg = errorMessage(error, "failed to delete post");
+      dispatch({ type: SET_ERROR, payload: msg });
+      throw error;
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
+  };
   useEffect(() => {
     getPosts();
     if (isAuthenticated) getDraftPosts();
@@ -346,6 +368,7 @@ export const PostProvider = ({ children }) => {
       getDraftPostById,
       getDraftPosts,
       deleteDraftPost,
+      deletePostHard,
       updateDraftPost,
       publishDraftPost,
     }),

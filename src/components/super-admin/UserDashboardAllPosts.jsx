@@ -12,10 +12,12 @@ const UserDashboardAllPosts = () => {
     state: { user },
   } = useAuth();
   const {
-    state: { posts, isLoading, currentPost, pagination },
+    state: { posts, isLoading, currentPost, currentDraftPost, pagination },
     deletePost,
     restorePost,
     getPostById,
+    getDraftPostById,
+    deletePostHard,
     getAllPostsAdmin,
   } = usePostHook();
   const [pId, setPId] = useState(null);
@@ -24,13 +26,18 @@ const UserDashboardAllPosts = () => {
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
 
+  useEffect(() => {
+    if (user?.id) getAllPostsAdmin(1, pagination.limit);
+  }, [user?.id]);
+
   const handlePageChange = (newPage) => {
     getAllPostsAdmin(newPage, pagination.limit);
   };
 
   const handleHardDeletePost = async () => {
     try {
-      await deletePost(pId);
+      await deletePostHard(pId);
+      getAllPostsAdmin(pagination.currentPage, pagination.limit);
     } catch (error) {
       console.log(error);
     } finally {
@@ -60,16 +67,22 @@ const UserDashboardAllPosts = () => {
     }
   };
 
-  const handleViewPost = async (id) => {
+  const handleViewPost = async (post) => {
+    setViewPId(post._id);
     try {
-      await getPostById(id);
+      if (post.draft) {
+        await getDraftPostById(post._id);
+      } else {
+        await getPostById(post._id);
+      }
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    if (user?.id) getAllPostsAdmin(1, pagination.limit);
-  }, [user?.id]);
+
+  const activePost = posts.find((p) => p._id === veiwpId)?.draft
+    ? currentDraftPost
+    : currentPost;
 
   return (
     <div className="mx-auto flex flex-col justify-center items-center w-full px-5">
@@ -118,10 +131,8 @@ const UserDashboardAllPosts = () => {
                         <Link
                           onClick={() => {
                             if (p.isDeleted) return;
-
                             setOpenViewModal(true);
-                            setPId(p._id);
-                            handleViewPost(p._id);
+                            handleViewPost(p);
                           }}
                           disabled={p.isDeleted}
                         >
@@ -151,8 +162,7 @@ const UserDashboardAllPosts = () => {
                           disabled={p.isDeleted}
                           onClick={() => {
                             setOpenViewModal(true);
-                            setViewPId(p._id);
-                            handleViewPost(p._id);
+                            handleViewPost(p);
                           }}
                         >
                           View
@@ -163,7 +173,7 @@ const UserDashboardAllPosts = () => {
                           disabled={p.isDeleted}
                           onClick={() => {
                             setOpenEditModal(true);
-                            handleViewPost(p._id);
+                            handleViewPost(p);
                           }}
                         >
                           Edit
@@ -227,12 +237,13 @@ const UserDashboardAllPosts = () => {
         postId={veiwpId}
         onClose={() => setOpenViewModal(false)}
         loading={isLoading}
-        post={currentPost}
+        post={activePost}
       />
       <EditPostModal
         isOpen={openEditModal}
+        postId={veiwpId}
         loading={isLoading}
-        post={currentPost}
+        post={activePost}
         onClose={() => setOpenEditModal(false)}
       />
     </div>

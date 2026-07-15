@@ -4,8 +4,8 @@ import { usePostHook } from "../../../hooks/usePostHook";
 
 const UserDashboardPostForm = () => {
   //set min length of title and content field in input form
-  const TITLE_MIN = 80;
-  const CONTENT_MIN = 150;
+  const TITLE_MIN = 10;
+  const CONTENT_MIN = 20;
   //fetch backend categories
   const {
     state: { category },

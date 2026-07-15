@@ -70,7 +70,9 @@ const UserDashboardAnalytics = () => {
           {normalUser && "Welcome to Dashboard User"}
         </h2>
       </div>
-
+      <h2 className="w-full text-base font-semibold uppercase  tracking-wide text-muted-text mb-3">
+        My Stats
+      </h2>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {userStatRows.map((s) => (
           <div
@@ -85,9 +87,9 @@ const UserDashboardAnalytics = () => {
 
       {statRows.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-text mb-3">
-            Site Overview
-          </h3>
+          <h2 className="text-base font-semibold uppercase tracking-wide text-muted-text mb-3">
+            Site Stats
+          </h2>
           <div className="overflow-hidden rounded-lg border border-border">
             <table className="w-full text-left">
               <thead>

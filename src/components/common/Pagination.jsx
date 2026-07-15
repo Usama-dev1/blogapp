@@ -21,7 +21,7 @@ const Pagination = ({ page, totalPages, onPageChange, disabled = false }) => {
           >
             Previous
           </button>
-          <p className="block text-sm  mx-4 text-link">
+          <p className="block text-xs mt-2 mx-4 text-link">
             Page {page} of {totalPages}
           </p>
           <button
